@@ -15,15 +15,15 @@ sourceCompatibility = requiredVersion
 targetCompatibility = requiredVersion
 
 
-apply from: 'compileAndTest.gradle'	// Build and Test Tasks
-apply from: 'cargo.gradle'	// Deployment Tasks
 //apply from: 'reverseDb.gradle'	// Generate JPA from Database
+apply from: 'compileAndTest.gradle'	// Build and Test Tasks
 apply from: 'spotless.gradle'	// Code Formatter Tasks
+apply from: 'cargo.gradle'	// Deployment Tasks
 
 
 
 //defaultTasks 'clean', 'idea', 'eclipse', 'build', 'test', 'cargoRedeployRemote'
-defaultTasks 'clean', 'idea', 'eclipse', 'build'
+defaultTasks 'determineEnv', 'clean', 'idea', 'eclipse', 'build'
 
 String vendor = 'Dennis Gesker'
 String appName = 'mold'

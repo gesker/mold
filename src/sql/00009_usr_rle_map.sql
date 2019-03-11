@@ -20,10 +20,11 @@ BEGIN;
 INSERT INTO usr_rle_map (usr_id, rle_id) VALUES (1, 1);
 INSERT INTO usr_rle_map (usr_id, rle_id) VALUES (1, 2);
 INSERT INTO usr_rle_map (usr_id, rle_id) VALUES (1, 3);
+
+INSERT INTO usr_rle_map (usr_id, rle_id) VALUES (2, 1);
+INSERT INTO usr_rle_map (usr_id, rle_id) VALUES (2, 2);
+INSERT INTO usr_rle_map (usr_id, rle_id) VALUES (2, 3);
 INSERT INTO usr_rle_map (usr_id, rle_id) VALUES (1, 4);
-INSERT INTO usr_rle_map (usr_id, rle_id) VALUES (1, 5);
-INSERT INTO usr_rle_map (usr_id, rle_id) VALUES (1, 6);
-INSERT INTO usr_rle_map (usr_id, rle_id) VALUES (1, 7);
 COMMIT;
 
 

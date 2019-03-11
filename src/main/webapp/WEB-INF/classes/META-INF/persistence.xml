@@ -5,14 +5,10 @@
 
     <persistence-unit name="ItoPersistenceUnit" transaction-type="JTA">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
-        <jta-data-source>java:jboss/datasources/PgDsXaIto</jta-data-source>
-        <exclude-unlisted-classes>true</exclude-unlisted-classes>
+        <jta-data-source>java:jboss/datasources/PgDsXaMold</jta-data-source>
+        <exclude-unlisted-classes>false</exclude-unlisted-classes>
 
-        <class>ito.data.jpa.Aaaaaa</class>
-        <class>ito.data.jpa.Usr</class>
-
-
-
+ 
 
         <!-- <properties/> -->
         <properties>
