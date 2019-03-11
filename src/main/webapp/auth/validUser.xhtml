@@ -1,0 +1,66 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns="http://www.w3.org/1999/xhtml">
+
+<h:head>
+    <title>Who are you?</title>
+    <meta name="viewport" content="width=device-width"/>
+    <meta http-equiv="refresh" content="#{session.maxInactiveInterval};url=#{request.contextPath}/index.xhtml"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+    <meta http-equiv="Pragma" content="no-cache"/>
+    <meta http-equiv="Expires" content="0"/>
+</h:head>
+<h:body>
+
+    <ui:composition template="/WEB-INF/facelets/faceletsTemplate.xhtml">
+
+        <ui:define name="top"></ui:define>
+
+        <ui:define name="content">
+            <h:form id="form">
+
+                <h:panelGrid columns="2" cellpadding="5">
+
+                    <h:outputLabel for="email" value="Email (Lowercase):"/>
+                    <p:inputText id="email" size="25" value="#{validUserBean.username}">
+                        <f:validateRequired/>
+                        <f:validateLength minimum="1" maximum="254"/>
+                        <f:validator for="email" binding="#{emailValidator}" validatorId="emailValidator"/>
+                        <f:validator for="email" binding="#{userExistsValidator}" validatorId="userExistsValidator"/>
+                        <f:ajax/>
+                    </p:inputText>
+
+                    <h:outputLabel for="password" value="Password:"/>
+                    <h:inputSecret id="password" size="25" value="#{validUserBean.password}">
+                        <f:validateRequired/>
+                        <f:validateLength minimum="1" maximum="254"/>
+                        <f:ajax/>
+                    </h:inputSecret>
+
+                    <f:facet name="footer">
+                        <p:commandButton id="loginButton" value="Login" icon="ui-icon-unlocked"
+                                         actionListener="#{validUserBean.login()}">
+                            <f:ajax execute="@all"/>
+                        </p:commandButton>
+                        <br/><br/><br/>
+                        <p:commandButton id="resetPaswdButton" value="Request Password Reset"
+                                         icon="ui-icon-arrowrefresh-1-e"
+                                         actionListener="#{validUserBean.navigateToPasswordResetRequestPageAction}"
+                                         immediate="true"/>
+                    </f:facet>
+                </h:panelGrid>
+            </h:form>
+
+        </ui:define>
+
+        <ui:define name="bottom"></ui:define>
+
+    </ui:composition>
+</h:body>
+</html>

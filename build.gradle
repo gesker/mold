@@ -1,0 +1,307 @@
+plugins {
+    id 'java'
+    id 'war'
+    id 'idea'
+    id 'eclipse'
+    id 'eclipse-wtp'
+    id 'maven-publish'
+    id "com.diffplug.gradle.spotless" version "3.16.0"
+	id "com.bmuschko.cargo" version "2.4"
+
+}
+
+ext.requiredVersion = JavaVersion.VERSION_11
+sourceCompatibility = requiredVersion
+targetCompatibility = requiredVersion
+
+
+apply from: 'compileAndTest.gradle'	// Build and Test Tasks
+apply from: 'cargo.gradle'	// Deployment Tasks
+//apply from: 'reverseDb.gradle'	// Generate JPA from Database
+apply from: 'spotless.gradle'	// Code Formatter Tasks
+
+
+
+//defaultTasks 'clean', 'idea', 'eclipse', 'build', 'test', 'cargoRedeployRemote'
+defaultTasks 'clean', 'idea', 'eclipse', 'build'
+
+String vendor = 'Dennis Gesker'
+String appName = 'mold'
+String description = 'Just an EE8 Template'
+String version = '1.0'
+
+ext.requiredVersion = JavaVersion.VERSION_11
+sourceCompatibility = requiredVersion
+targetCompatibility = requiredVersion
+
+
+// Library Database Driver
+ext.dbName = "mold"
+ext.postgreSqlJdbcVersion = "42.2.5" // PostgreSql JDBC Driver
+ext.mySqlConnectorJVersion = "8.0.13" // MySql JDBC Driver
+
+// Library WildFly
+ext.javaEeVersion = "8.0"
+ext.wildflyVersion = "15.0.1.Final" // Wildfly Version
+ext.wildflyCoreVersion = "7.0.0.Final" // Wildfly Version
+
+// Library Hibernate
+ext.hibernateVersion = "5.3.7.Final" // Matches the Hibernate version in Wildfly 15.0.1
+ext.hibernateValidatorVersion = "6.0.14.Final" // Matches the Hibernate version in Wildfly 15.0.1
+ext.hibernateAnnotationVersion = "5.0.4.Final" // Matches the Hibernate version in Wildfly 15.0.1
+
+// Library Hibernate Reverse Engineer
+ext.hibernateToolsVersion = "5.3.7.Final" // Used only to Reverse Engineer Database to Java POJOs
+ext.hibernateRevEngVersion = "5.1.10.Final" // Used only to Reverse Engineer Database to Java POJOs
+ext.hibernateToolsRevEngVersion = "5.2.6.Final"  // Used only to Reverse Engineer Database to Java POJOs
+
+// Library GIS
+ext.geolatteVersion = "1.3.0" // Matches the Hibernate version in Wildfly 15.0.1 -- manually added by drg
+ext.jtsVersion = "1.14.0"  // Matches the Hibernate version in Wildfly 15.0.1 -- manually added by drg
+ext.slfjVersion = "1.7.22" // Matches the Hibernate version in Wildfly 15.0.1
+
+
+// Library Versions Primefaces
+ext.primefacesVersion = "6.2"
+ext.primefacesThemeVersion = "1.0.10"
+ext.fontAwesomeVersion = "5.5.0"
+ext.itextVersion = "2.1.7"
+ext.apachePoiVersion = "3.13"
+ext.romeVersion = "1.5.0"
+ext.apacheCommonsFileUploadVersion = "1.3"
+ext.apacheCommonsIoVersion = "2.2"
+ext.atmosphereVersion = "2.4.6"
+ext.barcode4jVersion = "2.1"
+ext.qrgenVersion = "1.4"
+ext.primefacesThemeVersion = "1.0.10"
+
+
+// Library Versions Unit Testing
+ext.junitVersion = "4.12" // Base Unit Testing
+ext.arquillianVersion = "1.4.1.Final" // Unit Test in EE Container Framework
+ext.wildflyArquillianVersion = "2.1.1.Final" // Unit Testing WildFly Specifically
+
+
+// Support Deployment
+ext.cargoVersion = "1.7.1" // Load Application to WildFly
+
+
+//#####################################################################################################################
+//################################# Repositories  #####################################################################
+//#####################################################################################################################
+repositories {
+
+   
+    jcenter()
+    mavenCentral()
+
+    maven {
+        name "Gradle Repository"
+        url "https://plugins.gradle.org/m2/"
+    }
+
+    maven {
+        name "JBoss Public Maven Repository Group"
+        url "http://repository.jboss.org/nexus/content/groups/public/"
+    }
+
+    maven {
+        name "JBoss Public-JBoss Maven Repository Group"
+        url "https://repository.jboss.org/nexus/content/groups/public-jboss/"
+    }
+
+    maven {
+        name "JBoss Developer Maven Repository Group"
+        url "https://repository.jboss.org/nexus/content/groups/developer/"
+    }
+
+    maven {
+        name "MVN Repository Group"
+        url "https://mvnrepository.com/artifact/org.glassfish.soteria/javax.security.enterprise"
+    }
+
+    maven {
+        name "SonaType"
+        url 'https://oss.sonatype.org/content/repositories/snapshots/'
+    }
+    
+  maven {
+        name "Unofficial PrimeFaces Maven Repository"
+        url "http://primefaces.github.io/repository"
+    }
+
+    maven {
+        name "Unofficial PrimeFaces Maven Repository"
+        url "http://unofaces.github.io/repository"
+    }
+    
+    maven {
+        name "PrimeFaces Maven Repository"
+        url "https://repository.primefaces.org"
+    }    
+    
+}
+
+//#####################################################################################################################
+//################################# Dependencies  #####################################################################
+//#####################################################################################################################
+dependencies {
+
+    //# Reverse Engineer #
+    //# Compile #
+
+    // Hibernate
+    compileOnly "org.hibernate:hibernate-tools:${hibernateToolsRevEngVersion}"
+    compileOnly "org.hibernate:hibernate-core:${hibernateRevEngVersion}"
+    compileOnly "org.hibernate:hibernate-envers:${hibernateRevEngVersion}"
+    compileOnly "org.hibernate:hibernate-spatial:${hibernateRevEngVersion}"
+    compileOnly "org.hibernate:hibernate-entitymanager:${hibernateRevEngVersion}"
+
+    //JaxB
+    compileOnly group: 'javax.xml.bind', name: 'jaxb-api', version: '2.3.1'
+    compileOnly group: 'org.glassfish.jaxb', name: 'jaxb-runtime', version: '2.3.1'
+
+
+
+
+
+
+
+
+
+    // # Provided Compile (Already in the EE Container or Added to Container by Dennis) #
+	
+	// JDBC Driver -- Manually Added to WildFly Application Server
+	compileOnly "org.postgresql:postgresql:${postgreSqlJdbcVersion}"
+	compileOnly "mysql:mysql-connector-java:${mySqlConnectorJVersion}"
+
+    // GIS Libs
+    providedCompile  "org.geolatte:geolatte:${geolatteVersion}"
+    providedCompile  "org.geolatte:geolatte-geom:${geolatteVersion}"
+    providedCompile "org.geolatte:geolatte-geojson:${geolatteVersion}"
+    providedCompile "com.vividsolutions:jts-core:${jtsVersion}"
+    providedCompile "org.slf4j:slf4j-api:${slfjVersion}"
+    compileOnly "org.slf4j:slf4j-jdk14:${slfjVersion}"
+
+    // JDBC
+    providedCompile "org.postgresql:postgresql:${postgreSqlJdbcVersion}"
+    providedCompile "mysql:mysql-connector-java:${mySqlConnectorJVersion}"
+    
+    // WildFly / Java EE
+    providedCompile "javax:javaee-api:${javaEeVersion}"
+    providedCompile "org.wildfly:wildfly-spec-api:${wildflyVersion}"
+
+    // PrimeFaces Core and Themes
+    compile "org.primefaces:primefaces:${primefacesVersion}"
+    compile "org.primefaces.themes:home:${primefacesThemeVersion}"
+    compile "org.webjars:font-awesome:${fontAwesomeVersion}"
+    // PrimeFaces Dependencies
+    compile "com.lowagie:itext-rups:${itextVersion}"
+    compile "org.apache.poi:poi:${apachePoiVersion}"
+    compile "com.rometools:rome:${romeVersion}"
+    compile "commons-fileupload:commons-fileupload:${apacheCommonsFileUploadVersion}"
+    compile "commons-io:commons-io:${apacheCommonsIoVersion}"
+    compile "org.atmosphere:atmosphere-runtime:${atmosphereVersion}"
+    compile "net.glxn:qrgen:${qrgenVersion}"
+    compile "net.sf.barcode4j:barcode4j:${barcode4jVersion}"
+
+
+
+
+
+
+ 
+    //# Unit Testing #
+    
+    // Unit Testing JUnit
+    testCompile "junit:junit:${junitVersion}"
+
+    // Unit Testing Arquillian -- JBoss Elements
+    testCompile "org.jboss.arquillian:arquillian-bom:${arquillianVersion}"
+    testCompile "org.jboss.arquillian:arquillian-parent:${arquillianVersion}"
+    testCompile "org.jboss.arquillian:arquillian-build:${arquillianVersion}"
+    testCompile "org.jboss.arquillian.junit:arquillian-junit-core:${arquillianVersion}"
+    testCompile "org.jboss.arquillian.junit:arquillian-junit-container:${arquillianVersion}"
+    //testCompile "org.jboss.arquillian.junit:arquillian-junit-standalone:${arquillianVersion}"
+
+    // Unit Testing Arquillian -- WildFly Element
+    testCompile "org.wildfly.arquillian:elytron:${wildflyArquillianVersion}"
+    //testCompile "org.wildfly.arquillian:elytron-domain:${wildflyArquillianVersion}"
+    //testCompile "org.wildfly.arquillian:elytron-standalone:${wildflyArquillianVersion}"
+    testCompile "org.wildfly.arquillian:wildfly-arquillian-common:${wildflyArquillianVersion}"
+    testCompile "org.wildfly.arquillian:wildfly-arquillian-protocol-jmx:${wildflyArquillianVersion}"
+    testCompile "org.wildfly.arquillian:wildfly-arquillian-container-remote:${wildflyArquillianVersion}"
+    //testCompile "org.wildfly.arquillian:wildfly-arquillian-container-managed:${wildflyArquillianVersion}"
+    //testCompile "org.wildfly.arquillian:wildfly-arquillian-container-domain-remote:${wildflyArquillianVersion}"
+
+    // Unit Testing Arquillian -- WildFly CORE Elements
+    testCompile "org.wildfly.core:wildfly-core-build:${wildflyCoreVersion}"
+    testCompile "org.wildfly.core:wildfly-remoting:${wildflyCoreVersion}"
+    testCompile "org.wildfly.core:wildfly-controller:${wildflyCoreVersion}"
+    testCompile "org.wildfly.core:wildfly-controller-client:${wildflyCoreVersion}"
+    testCompile "org.wildfly.core:wildfly-host-controller:${wildflyCoreVersion}"
+    testCompile "org.wildfly.core:wildfly-request-controller:${wildflyCoreVersion}"
+    testCompile "org.wildfly.core:wildfly-management-client-content:${wildflyCoreVersion}"
+    
+    // Unit Testing JDBC Drivers
+    testCompile  "org.postgresql:postgresql:${postgreSqlJdbcVersion}"
+    testCompile  "mysql:mysql-connector-java:${mySqlConnectorJVersion}"
+
+   // Hibernate
+    testCompile  "org.hibernate:hibernate-core:${hibernateVersion}"
+    testCompile  "org.hibernate:hibernate-envers:${hibernateVersion}"
+    testCompile  "org.hibernate:hibernate-spatial:${hibernateVersion}"
+    testCompile  "org.hibernate:hibernate-validator:${hibernateValidatorVersion}"
+    testCompile  "org.hibernate.common:hibernate-commons-annotations:${hibernateAnnotationVersion}"
+
+    // Unit Testing GIS Libs
+    testCompile  "org.geolatte:geolatte:${geolatteVersion}"
+    testCompile  "org.geolatte:geolatte-geom:${geolatteVersion}"
+    testCompile  "org.geolatte:geolatte-geojson:${geolatteVersion}"
+    testCompile "com.vividsolutions:jts-core:${jtsVersion}"
+    testCompile "org.slf4j:slf4j-api:${slfjVersion}"
+
+    // Unit Testing WildFly Specification Components
+    testCompile "javax:javaee-api:${javaEeVersion}"
+    testCompile "org.wildfly:wildfly-spec-api:${wildflyVersion}"
+	
+	
+	
+	
+	//# Cargo #
+	// Cargo -- Deliver WAR to Container
+	cargo "org.codehaus.cargo:cargo-ant:${cargoVersion}"
+	cargo "org.codehaus.cargo:cargo-core-uberjar:${cargoVersion}"
+	cargo "org.codehaus.cargo:cargo-core-container-wildfly:${cargoVersion}"
+	// Cargo -- WildFly Controller Required by Cargo
+	cargo "org.wildfly.core:wildfly-controller-client:${wildflyCoreVersion}"
+	
+
+
+}
+
+
+
+//#####################################################################################################################
+//################################# Package Web App  ##################################################################
+//#####################################################################################################################
+war {
+
+    archiveBaseName = project.name
+    archiveVersion = version
+    archiveExtension = "war"
+
+    manifest {
+        attributes("Manifest-Version": version,
+                "Created-By": vendor,
+                "Specification-Title": appName,
+                "Specification-Version": version,
+                "Specification-Vendor": vendor,
+                "Implementation-Title": appName,
+                "Implementation-Version": version,
+                "Implementation-Vendor": vendor
+                //"Main-Class"             : "ito.MainClass",
+                //"Class-Path"             : configurations.compile.collect { it.getName() }.join(' ')
+        )
+    }
+}

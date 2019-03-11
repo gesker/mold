@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+<jboss-web>
+    <context-root>mold</context-root>
+    <security-domain>applicationDomainMold</security-domain>
+</jboss-web>

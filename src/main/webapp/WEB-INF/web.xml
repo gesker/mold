@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="4.0" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd">
+
+
+
+<!-- Welcome -->
+    <welcome-file-list>
+        <welcome-file>/page/index.xhtml</welcome-file>
+    </welcome-file-list>
+
+    <!-- Error Pages -->
+    <error-page>
+        <exception-type>javax.faces.application.ViewExpiredException</exception-type>
+        <location>/page/index.xhtml</location>
+    </error-page>
+
+    <!-- Session Configuration -->
+    <session-config>
+        <session-timeout>
+            5
+        </session-timeout>
+    </session-config>
+
+    <!-- General Context Paramaters -->
+    <context-param>
+        <param-name>javax.faces.DATETIMECONVERTER_DEFAULT_TIMEZONE_IS_SYSTEM_TIMEZONE</param-name>
+        <param-value>true</param-value>
+    </context-param>    
+
+    <!-- Primefaces Context Paramaters -->
+    <context-param>
+        <param-name>javax.faces.PROJECT_STAGE</param-name>
+        <param-value>Development</param-value>
+    </context-param>
+    <context-param>
+        <param-name>primefaces.THEME</param-name>
+        <param-value>omega</param-value>
+    </context-param>
+    <context-param>
+        <param-name>primefaces.mobile.THEME</param-name>
+        <param-value>omega</param-value>
+    </context-param>
+    <context-param>
+        <param-name>primefaces.FONT_AWESOME</param-name>
+        <param-value>true</param-value>
+    </context-param>
+
+
+
+
+    <!-- Faces Servlet and Faces Servlet Mapping -->
+    <servlet>
+        <servlet-name>Faces Servlet</servlet-name>
+        <servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Faces Servlet</servlet-name>
+        <url-pattern>*.xhtml</url-pattern>
+    </servlet-mapping>
+
+
+
+
+    <!-- Web Fonts -->
+    <mime-mapping>
+        <extension>eot</extension>
+        <mime-type>application/vnd.ms-fontobject</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>otf</extension>
+        <mime-type>font/opentype</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>ttf</extension>
+        <mime-type>application/x-font-ttf</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>woff</extension>
+        <mime-type>application/x-font-woff</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>svg</extension>
+        <mime-type>image/svg+xml</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>ico</extension>
+        <mime-type>image/x-icon</mime-type>
+    </mime-mapping>
+
+
+    <!-- Web Login Configuration Works with WildFly Security Realm -->
+    <login-config>
+        <auth-method>FORM</auth-method>
+        <realm-name>moldDomain</realm-name>
+        <form-login-config>
+            <form-login-page>/auth/validUser.xhtml</form-login-page>
+            <form-error-page>/auth/validUser.xhtml</form-error-page>
+        </form-login-config>
+    </login-config>
+
+    <!-- Pages Locked Down by Security Realm -->
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>Secure Pages</web-resource-name>
+            <description/>
+            <url-pattern>/page</url-pattern>
+            <url-pattern>/page/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>root</role-name>
+            <role-name>financial</role-name>
+            <role-name>customer</role-name>
+        </auth-constraint>
+    </security-constraint>
+
+    <!-- Security Roles -->
+    <security-role>
+        <role-name>root</role-name>
+    </security-role>
+    <security-role>
+        <role-name>financial</role-name>
+    </security-role>
+    <security-role>
+        <role-name>customer</role-name>
+    </security-role>
+
+
+</web-app>

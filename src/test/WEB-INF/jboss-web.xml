@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+<jboss-web>
+    <context-root>web</context-root>
+    <!--<security-domain>securityDomainUs</security-domain>-->
+    <!--<security-domain>jdbcRealmUs</security-domain>-->
+    <security-domain>applicationDomainUs</security-domain>
+</jboss-web>

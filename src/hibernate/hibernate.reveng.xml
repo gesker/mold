@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-reverse-engineering PUBLIC
+        "-//Hibernate/Hibernate Reverse Engineering DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-reverse-engineering-3.0.dtd">
+
+<hibernate-reverse-engineering>
+
+
+    <schema-selection match-catalog=".*" match-schema="public" match-table=".*"/>
+
+
+    <type-mapping>
+        <sql-type jdbc-type="ARRAY" hibernate-type="java.util.ArrayList"/>
+        <sql-type jdbc-type="BIGINT" hibernate-type="java.lang.Long"/>
+        <sql-type jdbc-type="BINARY" hibernate-type="java.lang.Byte[]"/>
+        <sql-type jdbc-type="BIT" hibernate-type="java.lang.Boolean"/>
+        <sql-type jdbc-type="BLOB" hibernate-type="java.sql.Blob"/>
+        <sql-type jdbc-type="BOOLEAN" hibernate-type="java.lang.Boolean"/>
+        <sql-type jdbc-type="CHAR" hibernate-type="java.lang.Character"/>
+        <sql-type jdbc-type="CLOB" hibernate-type="java.sql.Clob"/>
+        <sql-type jdbc-type="DATALINK" hibernate-type="java.net.URL"/>
+        <sql-type jdbc-type="DATE" hibernate-type="java.sql.Date"/>
+        <sql-type jdbc-type="DECIMAL" hibernate-type="java.lang.Double"/>
+        <sql-type jdbc-type="FLOAT" hibernate-type="java.lang.Float"/>
+        <sql-type jdbc-type="INTEGER" hibernate-type="java.lang.Integer"/>
+        <sql-type jdbc-type="JAVA_OBJECT" hibernate-type="java.lang.Object"/>
+        <sql-type jdbc-type="LONGNVARCHAR" hibernate-type="java.lang.String"/>
+        <sql-type jdbc-type="LONGVARBINARY" hibernate-type="java.lang.Byte[]"/>
+        <sql-type jdbc-type="LONGVARCHAR" hibernate-type="java.lang.String"/>
+        <sql-type jdbc-type="NCHAR" hibernate-type="java.lang.Character"/>
+        <sql-type jdbc-type="NCLOB" hibernate-type="java.sql.Clob"/>
+        <sql-type jdbc-type="NULL" hibernate-type="java.lang.Null"/>
+        <sql-type jdbc-type="NVARCHAR" hibernate-type="java.lang.String"/>
+        <!--<sql-type jdbc-type="OTHER" hibernate-type="java.lang.Object"/>--> <!-- Can not handle PostGis -->
+        <!--<sql-type jdbc-type="OTHER" hibernate-type="org.geolatte.geom.MultiPolygon"/>-->
+        <sql-type jdbc-type="REAL" hibernate-type="java.lang.Float"/>
+        <sql-type jdbc-type="REF" hibernate-type="javax.sql.rowset.serial.SerialRef"/>
+        <sql-type jdbc-type="REF_CURSOR" hibernate-type="javax.sql.rowset.serial.SerialRef"/>
+        <sql-type jdbc-type="ROWID" hibernate-type="java.lang.Long"/>
+        <sql-type jdbc-type="SMALLINT" hibernate-type="java.lang.Integer"/>
+        <sql-type jdbc-type="SQLXML" hibernate-type="java.sql.Clob"/>
+        <sql-type jdbc-type="STRUCT" hibernate-type="javax.sql.rowset.serial.SerialStruct"/>
+        <sql-type jdbc-type="TIME" hibernate-type="java.sql.Timestamp"/>
+        <sql-type jdbc-type="TIME_WITH_TIMEZONE" hibernate-type="java.sql.Timestamp"/>
+        <sql-type jdbc-type="TIMESTAMP" hibernate-type="java.sql.Timestamp"/>
+        <sql-type jdbc-type="TIMESTAMP_WITH_TIMEZONE" hibernate-type="java.sql.Timestamp"/>
+        <sql-type jdbc-type="TINYINT" hibernate-type="java.lang.Short"/>
+        <sql-type jdbc-type="VARBINARY" hibernate-type="java.sql.Byte[]"/>
+        <sql-type jdbc-type="VARCHAR" hibernate-type="java.lang.String"/>
+    </type-mapping>
+
+    <table-filter match-catalog=".*" match-schema="public" match-name="spatial_ref_sys" exclude="true"/>
+    <table-filter match-catalog=".*" match-schema="public" match-name="us_gaz" exclude="true"/>
+    <table-filter match-catalog=".*" match-schema="public" match-name="us_lex" exclude="true"/>
+    <table-filter match-catalog=".*" match-schema="public" match-name="us_rules" exclude="true"/>
+    <table-filter match-catalog=".*" match-schema="public" match-name="geography_columns" exclude="true"/>
+    <table-filter match-catalog=".*" match-schema="public" match-name="geometry_columns" exclude="true"/>
+    <table-filter match-catalog=".*" match-schema="public" match-name="raster_columns" exclude="true"/>
+    <table-filter match-catalog=".*" match-schema="public" match-name="raster_overviews" exclude="true"/>
+    <table-filter match-catalog=".*" match-schema="public" match-name=".*_aud" exclude="true"/>
+    <table-filter match-catalog=".*" match-schema="public" match-name="revinfo" exclude="true"/>
+
+
+
+
+
+
+
+
+
+
+
+
+    <table name="usr" schema="public">
+        <primary-key>
+            <key-column name="id"/>
+        </primary-key>
+        <foreign-key foreign-table="usr">
+            <column-ref local-column="usr_created" foreign-column="usr"/>
+            <many-to-one property="usr_created" />
+        </foreign-key>
+        <foreign-key foreign-table="usr">
+            <column-ref local-column="usr_modified" foreign-column="usr"/>
+            <many-to-one property="usr_modified" />
+        </foreign-key>
+    </table>
+    <table name="aaaaaa" schema="public">
+        <primary-key>
+            <key-column name="id"/>
+        </primary-key>
+        <foreign-key foreign-table="usr">
+            <column-ref local-column="usr_created" foreign-column="usr"/>
+            <many-to-one property="usr_created" />
+        </foreign-key>
+        <foreign-key foreign-table="usr">
+            <column-ref local-column="usr_modified" foreign-column="usr"/>
+            <many-to-one property="usr_modified" />
+        </foreign-key>
+    </table>
+    <table name="rle" schema="public">
+        <primary-key>
+            <key-column name="id"/>
+        </primary-key>
+        <foreign-key foreign-table="usr">
+            <column-ref local-column="usr_created" foreign-column="usr"/>
+            <many-to-one property="usr_created" />
+        </foreign-key>
+        <foreign-key foreign-table="usr">
+            <column-ref local-column="usr_modified" foreign-column="usr"/>
+            <many-to-one property="usr_modified" />
+        </foreign-key>
+    </table>
+
+
+
+
+
+    <table name="login_usr_known_log" schema="public">
+        <foreign-key foreign-table="usr">
+            <column-ref local-column="usr_created" foreign-column="usr"/>
+            <many-to-one property="usr" />
+        </foreign-key>
+        <foreign-key foreign-table="usr">
+            <column-ref local-column="usr_modified" foreign-column="usr"/>
+            <many-to-one property="usr" />
+        </foreign-key>
+    </table>
+    <table name="login_usr_unknown_log" schema="public">
+        <foreign-key foreign-table="usr">
+            <column-ref local-column="usr_created" foreign-column="usr"/>
+            <many-to-one property="usr_created" />
+        </foreign-key>
+        <foreign-key foreign-table="usr">
+            <column-ref local-column="usr_modified" foreign-column="usr"/>
+            <many-to-one property="usr_modified" />
+        </foreign-key>
+    </table>
+
+
+
+
+
+
+
+    <table name="usr_rle_map" schema="public">
+        <foreign-key foreign-table="usr">
+            <column-ref local-column="usr_created" foreign-column="usr"/>
+            <many-to-one property="usr_created" />
+        </foreign-key>
+        <foreign-key foreign-table="usr">
+            <column-ref local-column="usr_modified" foreign-column="usr"/>
+            <many-to-one property="usr_modified" />
+        </foreign-key>
+    </table>
+    <table name="usr_rle_map_view" schema="public">
+        <primary-key>
+            <key-column name="id"/>
+        </primary-key>
+    </table>
+
+
+
+
+
+</hibernate-reverse-engineering>

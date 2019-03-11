@@ -1,0 +1,33 @@
+task compileAndTestScriptDescription() {
+    ant.echo("Place all JavaCompile and JavaTestCompile directives and changes outside of the main build script")
+}
+
+
+//#####################################################################################################################
+//################################# Compiler Options ##################################################################
+//#####################################################################################################################
+compileJava {
+    options.encoding = 'UTF-8'
+    options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
+    options.fork = true
+}
+
+compileTestJava {
+    options.encoding = 'UTF-8'
+    options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
+    options.fork = true
+}
+
+tasks.withType(JavaCompile) {
+    sourceCompatibility = requiredVersion
+    targetCompatibility = requiredVersion
+}
+
+
+//#####################################################################################################################
+//################################# Run Unit Tests In Parallel ########################################################
+//#####################################################################################################################
+tasks.withType(Test) {
+    maxParallelForks = Runtime.runtime.availableProcessors()
+}
+

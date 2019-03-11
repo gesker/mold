@@ -1,0 +1,72 @@
+task spotlessScriptDescription() {
+    ant.echo("Place all Spotless formatting directives and changes outside of the main build scriptt")
+}
+
+
+//#####################################################################################################################
+//################################# Spotless Formatter  ###############################################################
+//#####################################################################################################################
+spotless() {
+    // Usage Details Here: https://github.com/diffplug/spotless/tree/master/plugin-gradle
+
+    enforceCheck false
+
+    java {
+        target "**/*.java"
+        replaceRegex 'Too many lines', '[\n]+', '\n'
+        removeUnusedImports()
+        importOrder 'java', 'javax', 'org', 'com'
+        trimTrailingWhitespace()
+        indentWithSpaces(4) // Or, indentWithTabs()
+        endWithNewline()
+        //eclipse()
+        //eclipse().configFile 'spotless.eclipseformat.xml'
+        googleJavaFormat() // <-- Not sure I like how it treats named queries
+        //paddedCell()
+    }
+
+    groovyGradle {
+        target '**/*.gradle'
+        trimTrailingWhitespace()
+        indentWithSpaces(4) // Or, indentWithTabs()
+        endWithNewline()
+        //paddedCell()
+    }
+
+    format 'sql', {
+        target '**/*.sql'
+        replaceRegex 'Too many spaces', '\\s{2,}', ' '
+        replaceRegex 'Too many lines', '[\n]+', '\n'
+        trimTrailingWhitespace()
+        indentWithSpaces(4) // Or, indentWithTabs()
+        endWithNewline()
+
+        // SQL Key Words to Upper Case
+        // Put Replace Statments Here
+
+        // A couple of annoying spaces
+        replace 'Remove space before comma', ' ,', ','
+        replace 'Remove space before COMMIT', ' COMMIT;', 'COMMIT;'
+
+        // Add some lines back in
+        replace 'Add line before BEGIN semicolon', 'BEGIN;', '\nBEGIN;'
+        replace 'Add line before id', ' id', '\n id'
+
+        replace 'Add line after semicolon', ';', ';\n'
+        replace 'Add line after COMMIT semicolon', 'COMMIT;', 'COMMIT;\n'
+        replace 'Add line after after KEY comma', 'KEY,', 'KEY,\n'
+        replace 'Add line after NULL comma', 'NULL,', 'NULL,\n'
+        replace 'Add line after after open parentheses comma', '),', '),\n'
+
+        paddedCell()
+    }
+
+    format 'misc', {
+        target '**/*.md', '**/*.gitignore', '**/*.properties'
+        replaceRegex 'Too many spaces', '\\s{2,}', ' '
+        replaceRegex 'Too many lines', '[\n]+', '\n'
+        trimTrailingWhitespace()
+        indentWithSpaces(4) // Or, indentWithTabs()
+        endWithNewline()
+    }
+} 

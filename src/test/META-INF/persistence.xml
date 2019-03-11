@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns="http://xmlns.jcp.org/xml/ns/persistence"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.2"
+             xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_2.xsd">
+
+    <persistence-unit name="ItoPersistenceUnit" transaction-type="JTA">
+        <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+        <jta-data-source>java:jboss/datasources/PgDsXaIto</jta-data-source>
+        <exclude-unlisted-classes>false</exclude-unlisted-classes>
+
+
+        <!-- <properties/> -->
+        <properties>
+
+            <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQL95Dialect"/>
+
+            <property name="hibernate.connection.autocommit" value="true"/>
+            <property name="hibernate.connection.zeroDateTimeBehavior" value="convertToNull"/>
+
+            <property name="hibernate.cache.use_second_level_cache" value="true"/>
+            <property name="hibernate.cache.use_query_cache" value="true"/>
+            <property name="hibernate.cache.use_minimal_puts" value="false"/>
+
+            <property name="hibernate.generate_statistics" value="true"/>
+
+            <!-- <property name="hibernate.hbm2ddl.auto" value="update"/> -->
+
+            <property name="hibernate.id.new_generator_mappings" value="true"/>
+
+            <property name="hibernate.jdbc.batch_size" value="1000"/>
+            <property name="hibernate.jdbc.use_get_generated_keys" value="true"/>
+
+            <property name="hibernate.order_inserts" value="true"/>
+            <property name="hibernate.order_updates" value="true"/>
+
+            <property name="hibernate.transaction.auto_close_session" value="false"/>
+
+
+            <property name="hibernate.show_sql" value="true"/>
+            <property name="hibernate.format_sql" value="true"/>
+            
+
+
+        </properties>
+
+    </persistence-unit>
+</persistence>

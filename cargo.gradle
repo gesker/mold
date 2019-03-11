@@ -1,0 +1,50 @@
+task cargoScriptDescription() {
+    ant.echo("Store all Deployment/Cargo directives and changes outside of the main build script")
+}
+
+
+//#####################################################################################################################
+//################################# Determine Environment #############################################################
+//#####################################################################################################################
+def String buildHostname
+def String buildUser
+task determineEnv {
+    buildHostname = InetAddress.getLocalHost().getHostName().toLowerCase().trim()
+    println('The name of this build host is ' + buildHostname)
+    buildUser = System.getProperty("user.name").toLowerCase().trim()
+    println('The name of this build user is ' + buildUser)
+}
+
+
+//#####################################################################################################################
+//################################# Deploy War  #######################################################################
+//#####################################################################################################################
+cargo {
+
+
+    containerId = 'wildfly14x'
+    port = 9990
+
+    remote {
+        containerId = 'wildfly14x'
+        port = 9990
+        hostname = 'localhost'
+        username = 'wildfly'
+        password = 'wildfly'
+    }
+
+    local {
+        homeDir = file('/home/' + System.getProperty("user.name").toLowerCase().trim() + '/bin/wildfly')
+        outputFile = file('build/output.log')
+        timeout = 60000
+
+        containerProperties {
+            property 'cargo.tomcat.ajp.port', 9990
+        }
+    }
+}
+
+
+
+
+
