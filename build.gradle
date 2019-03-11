@@ -193,7 +193,7 @@ dependencies {
 
     // PrimeFaces Core and Themes
     compile "org.primefaces:primefaces:${primefacesVersion}"
-    compile "org.primefaces.themes:home:${primefacesThemeVersion}"
+    compile "org.primefaces.themes:all-themes:${primefacesThemeVersion}"
     compile "org.webjars:font-awesome:${fontAwesomeVersion}"
     // PrimeFaces Dependencies
     compile "com.lowagie:itext-rups:${itextVersion}"

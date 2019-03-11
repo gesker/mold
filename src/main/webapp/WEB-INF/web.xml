@@ -6,14 +6,10 @@
 
 <!-- Welcome -->
     <welcome-file-list>
-        <welcome-file>/page/index.xhtml</welcome-file>
+        <welcome-file>page/index.xhtml</welcome-file>
     </welcome-file-list>
 
-    <!-- Error Pages -->
-    <error-page>
-        <exception-type>javax.faces.application.ViewExpiredException</exception-type>
-        <location>/page/index.xhtml</location>
-    </error-page>
+
 
     <!-- Session Configuration -->
     <session-config>
@@ -103,7 +99,7 @@
     <!-- Pages Locked Down by Security Realm -->
     <security-constraint>
         <web-resource-collection>
-            <web-resource-name>Secure Pages</web-resource-name>
+            <web-resource-name>Secure Application Pages</web-resource-name>
             <description/>
             <url-pattern>/page</url-pattern>
             <url-pattern>/page/*</url-pattern>
