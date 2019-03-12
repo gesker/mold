@@ -1,0 +1,64 @@
+### Get the driver jar ###
+cd /tmp
+mvn dependency:copy -Dartifact=org.postgresql:postgresql:42.2.5:jar -DoutputDirectory=.
+
+### Add the Postgresql Module to WildFly ###
+Assuming postgresql-42.2.5.jar is in /tmp/postgresql-42.2.5.jar
+{wildfly_home}/bin/jboss-cli.sh --connect
+module add --name=org.postgresql --resources=/tmp/postgresql-42.2.5.jar --dependencies=javax.api,javax.transaction.api [Enter]
+
+### Add the Postgresql Driver to WildFly ###
+/subsystem=datasources/jdbc-driver=postgresql:add(driver-name=postgresql,module-slot=main,driver-module-name=org.postgresql,driver-class-name=org.postgresql.Driver,driver-xa-datasource-class-name=org.postgresql.xa.PGXADataSource,jdbc-compliant=true,driver-major-version=42,driver-minor-version=2) [Enter]
+/subsystem=datasources:installed-drivers-list [Enter]
+
+### Add the datasources section of standalone-full.xml
+WildFly using a text editor ###
+
+
+
+               <datasource jndi-name="java:jboss/datasources/PgDsMold" pool-name="PgDsMold" enabled="true" use-java-context="true" statistics-enabled="true">
+                    <connection-url>jdbc:postgresql://localhost:5432/mold</connection-url>
+                    <driver>postgresql</driver>
+                    <pool>
+                        <min-pool-size>5</min-pool-size>
+                        <initial-pool-size>5</initial-pool-size>
+                        <max-pool-size>100</max-pool-size>
+                        <prefill>true</prefill>
+                    </pool>
+                    <security>
+                        <user-name>wildfly</user-name>
+                        <password>wildfly</password>
+                    </security>
+                    <validation>
+                        <valid-connection-checker class-name="org.jboss.jca.adapters.jdbc.extensions.postgres.PostgreSQLValidConnectionChecker"/>
+                        <exception-sorter class-name="org.jboss.jca.adapters.jdbc.extensions.postgres.PostgreSQLExceptionSorter"/>
+                    </validation>
+                </datasource>
+
+                <xa-datasource jndi-name="java:jboss/datasources/PgDsXaMold" pool-name="PgDsXaMold" enabled="true" use-java-context="true" statistics-enabled="true">
+                    <xa-datasource-property name="ServerName">
+                        localhost
+                    </xa-datasource-property>
+                    <xa-datasource-property name="PortNumber">
+                        5432
+                    </xa-datasource-property>
+                    <xa-datasource-property name="DatabaseName">
+                        mold
+                    </xa-datasource-property>
+                    <driver>postgresql</driver>
+                    <xa-pool>
+                        <min-pool-size>5</min-pool-size>
+                        <initial-pool-size>5</initial-pool-size>
+                        <max-pool-size>100</max-pool-size>
+                        <prefill>true</prefill>
+                    </xa-pool>
+                    <security>
+                        <user-name>wildfly</user-name>
+                        <password>wildfly</password>
+                    </security>
+                    <validation>
+                        <valid-connection-checker class-name="org.jboss.jca.adapters.jdbc.extensions.postgres.PostgreSQLValidConnectionChecker"/>
+                        <exception-sorter class-name="org.jboss.jca.adapters.jdbc.extensions.postgres.PostgreSQLExceptionSorter"/>
+                    </validation>
+                </xa-datasource>
+
