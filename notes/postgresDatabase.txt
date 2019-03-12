@@ -1,0 +1,23 @@
+Make Sure you have a local PostgreSQL Database installed
+This Project was built using PostgreSQL 11, PostGis and Contrib install packages on a Debian/Ubuntu 18.10 System
+
+Create or edit the file:
+
+/etc/apt/sources.list.d/pgsql.list
+
+And add the entry:
+
+deb [arch=amd64] http://apt.postgresql.org/pub/repos/apt/ cosmic-pgdg main
+
+If you are running an older version of PostgreSQL I STRONGLY recommend you PURGE it and install 11 using the deb repository above.
+
+
+$ sudo -s								Elevate to Root
+# su postgres							Become user postgres
+$ createuser -s -P wildfly				Create role "wildfly" in PostgreSql (on my dev machine both the database role and password is wildfly)
+$ createdb -O wildfly -E UTF8 mold		Create database "mold" and make role "wildfly" the owner in PostgreSql
+
+
+
+
+

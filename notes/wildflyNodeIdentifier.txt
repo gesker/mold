@@ -1,0 +1,8 @@
+Edit standalone-full.xml
+Find the tag:
+
+<core-environment node-identifier="${jboss.tx.node.id:1}">
+
+and change it to:
+
+<core-environment node-identifier=”localhost”>

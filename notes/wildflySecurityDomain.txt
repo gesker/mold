@@ -1,0 +1,11 @@
+Note to self: As of this writing I think this approach to setting up a jdbc-realm is going to be deprecated
+
+/subsystem=elytron/jdbc-realm=jdbcRealmMold:add(principal-query=[{sql="SELECT nme, pswd FROM usr_rle_map_view WHERE email = ?", data-source=PgDsMold, attribute-mapping=[{index=1,to=groups}] simple-digest-mapper={algorithm=simple-digest-sha-512, password-index=2} }])
+
+/subsystem=elytron/security-domain=securityDomainMold:add(realms=[{realm=jdbcRealmMold, role-decoder=groups-to-roles}], default-realm=jdbcRealmMold, permission-mapper=default-permission-mapper)
+
+/subsystem=elytron/http-authentication-factory=httpAuthMold:add(http-server-mechanism-factory=global, security-domain=securityDomainMold, mechanism-configurations=[{mechanism-name=FORM, mechanism-realm-configurations=[{realm-name=securityDomainMold}] }])
+
+/subsystem=undertow/application-security-domain=applicationDomainMold:add(http-authentication-factory=httpAuthMold)
+
+/subsystem=ejb3/application-security-domain=applicationDomainMold:add(security-domain=securityDomainMold)

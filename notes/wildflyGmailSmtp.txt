@@ -1,0 +1,14 @@
+<!-- Add Snippet to <socket-binding-group> section of standalone-full.xml -->
+
+<outbound-socket-binding name="mail-smtp-gmail" source-port="0" fixed-source-port="false">
+    <remote-destination host="smtp.gmail.com" port="465"/>
+</outbound-socket-binding>
+
+
+
+
+<!-- Add Snippet to <subsystem xmlns="urn:jboss:domain:mail:3.0"> section of standalone-full.xml -->
+
+<mail-session name="java:jboss/mail/Gmail" jndi-name="java:jboss/mail/Gmail" from="yourUsername@gmail.com">
+    <smtp-server outbound-socket-binding-ref="mail-smtp-gmail" ssl="true" username="yourUsername@gmail.com" password="YourReallyGoodPassword"/>
+</mail-session>

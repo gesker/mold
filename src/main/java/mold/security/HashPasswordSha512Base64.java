@@ -21,7 +21,7 @@ public class HashPasswordSha512Base64 {
         MessageDigest md;
 
 
-        logger.warning("Remove this logging in PRRODUCTION");
+        logger.warning("Remove this logging in PRODUCTION");
         logger.warning("Password in PlainText:" + plainTextPassword);
 
         try {

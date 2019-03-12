@@ -1,0 +1,7 @@
+cd /{WILDFLYHOME}/bin
+./jboss-cli.sh --connect
+/socket-binding-group=standard-sockets/socket-binding=ajp:add(port=8009) (Might fail if it already exists. It's ok if it does.)
+/subsystem=undertow/server=default-server/ajp-listener=myListener:add(socket-binding=ajp, scheme=http, enabled=true)
+service wildfly restart
+netstat -an | grep 8009 (just to make sure it is listening on 8009) OR
+netstat -an | grep LISTEN
