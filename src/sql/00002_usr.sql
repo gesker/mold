@@ -1,7 +1,7 @@
 -- Table of Application Users
 -- email address is userName -- RFC3696 and RFC5321 indicate 254 characters plus 2 angle
--- SHA-512, Hex encoded in the application = 128 characters
--- If this is an Employee it must have an accounting code description VARCHAR(254),
+-- SHA-512, Hex 64 Bit encoded in the application = 88 characters
+
 
 BEGIN;
 CREATE TABLE IF NOT EXISTS usr (
