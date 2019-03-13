@@ -1,21 +1,19 @@
 package mold.security;
 
-import mold.security.HashGenerator;
-import mold.security.HashServiceType;
-import mold.security.HashType;
-import java.util.HashMap;
-import java.util.Map;
+
 import javax.annotation.PostConstruct;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.security.enterprise.identitystore.Pbkdf2PasswordHash;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  *
  * @author Sukma Wardana
  * @version 1.0.0
- */
-@Stateless
+ */@Stateless
+
 @HashServiceType(HashType.PBKDF)
 public class PbkdfGenerator implements HashGenerator {
 
@@ -36,6 +34,12 @@ public class PbkdfGenerator implements HashGenerator {
 
     @Override
     public String getHashedText(String text) {
+        System.out.println("Input Text: " + text);
+
+        String hashed = this.pbkdfHash.generate(text.toCharArray());
+
+        System.out.println("Hashed Text: " + hashed);
+
         return this.pbkdfHash.generate(text.toCharArray());
     }
 

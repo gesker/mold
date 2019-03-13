@@ -1,7 +1,7 @@
 package mold.security;
 
 import org.junit.Test;
-
+import mold.security.HashPasswordSha512Base64;
 import static org.junit.Assert.assertEquals;
 
 public class HashPasswordSha512Base64Test {
