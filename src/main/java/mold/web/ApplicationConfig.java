@@ -19,23 +19,20 @@ import javax.security.enterprise.identitystore.Pbkdf2PasswordHash;
 	    dataSourceLookup = "java:jboss/datasources/PgDsMold",
 	    callerQuery = "SELECT usrpswd FROM usr_rle_map_view WHERE usrnme = ?",
 	    groupsQuery = "SELECT rlenme FROM usr_rle_map_view WHERE usrnme = ?",
-	    hashAlgorithm = Pbkdf2PasswordHash.class,
-	    priorityExpression = "100",
-	    hashAlgorithmParameters = {
-	    		"Pbkdf2PasswordHash.Algorithm=PBKDF2WithHmacSHA512",
-	    		"Pbkdf2PasswordHash.Iterations=4096",
-	    		"Pbkdf2PasswordHash.SaltSizeBytes=64",
-	    		"Pbkdf2PasswordHash.KeySizeBytes=64"
-	    }
+		hashAlgorithm = Pbkdf2PasswordHash.class,
+		priorityExpression = "#{100}",
+		hashAlgorithmParameters = {
+				"Pbkdf2PasswordHash.Algorithm=PBKDF2WithHmacSHA512",
+				"Pbkdf2PasswordHash.Iterations=8192",
+				"Pbkdf2PasswordHash.KeySizeBytes=128",
+				"Pbkdf2PasswordHash.SaltSizeBytes=128"
+
+		}
 	)
 @FacesConfig
 @ApplicationScoped
 public class ApplicationConfig {
-	
-//	 public String doHash(String in) {		 
-//		 HashPasswordSha512Base64 hash = new HashPasswordSha512Base64(in);
-//		 return hash.getSha512Base64PaddedPasswordHash();
-//		 }
-	
+
+
 
 }
