@@ -6,6 +6,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.logging.Logger;
 
 public class HashPasswordSha512Base64 {
+
     byte[] plainTextPasswordBytes;
     byte[] sha512PasswordHash;
     private Logger logger = Logger.getLogger(this.getClass().getSimpleName());

@@ -1,5 +1,7 @@
 Note to self: As of this writing I think this approach to setting up a jdbc-realm is going to be deprecated
 
+
+
 /subsystem=elytron/jdbc-realm=jdbcRealmMold:add(principal-query=[{sql="SELECT usrNme, usrPswd FROM usr_rle_map_view WHERE usrNme = ?", data-source=PgDsMold, attribute-mapping=[{index=1,to=groups}] simple-digest-mapper={algorithm=simple-digest-sha-512, password-index=2} }])
 
 /subsystem=elytron/security-domain=securityDomainMold:add(realms=[{realm=jdbcRealmMold, role-decoder=groups-to-roles}], default-realm=jdbcRealmMold, permission-mapper=default-permission-mapper)

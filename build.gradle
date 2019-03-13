@@ -23,7 +23,7 @@ apply from: 'cargo.gradle'	// Deployment Tasks
 
 
 //defaultTasks 'clean', 'idea', 'eclipse', 'build', 'test', 'cargoRedeployRemote'
-defaultTasks 'determineEnv', 'clean', 'idea', 'eclipse', 'build'
+defaultTasks 'determineEnv', 'clean', 'idea', 'eclipse', 'build', 'test'
 
 String vendor = 'Dennis Gesker'
 String appName = 'mold'
@@ -189,6 +189,7 @@ dependencies {
     
     // WildFly / Java EE
     providedCompile "javax:javaee-api:${javaEeVersion}"
+    providedCompile "javax.security.enterprise:javax.security.enterprise-api:1.0-b11"
     providedCompile "org.wildfly:wildfly-spec-api:${wildflyVersion}"
 
     // PrimeFaces Core and Themes
