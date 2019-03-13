@@ -19,9 +19,9 @@ public class HashPasswordPBKDF2WithHmacSHA512 {
 
         Map<String, String> parametersMap = new HashMap<>();
         parametersMap.put("Pbkdf2PasswordHash.Algorithm", "PBKDF2WithHmacSHA512");
-        parametersMap.put("Pbkdf2PasswordHash.Iterations", "8192");
-        parametersMap.put("Pbkdf2PasswordHash.KeySizeBytes", "128");
-        parametersMap.put("Pbkdf2PasswordHash.SaltSizeBytes", "128");
+        parametersMap.put("Pbkdf2PasswordHash.Iterations", "4096");
+        parametersMap.put("Pbkdf2PasswordHash.KeySizeBytes", "64");
+        parametersMap.put("Pbkdf2PasswordHash.SaltSizeBytes", "64");
 
         pbkdfHash.initialize(parametersMap);
 
