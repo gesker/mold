@@ -595,7 +595,7 @@ task tweakJpaObjectsAddQueries(dependsOn: tweakJpaObjects) {
 
                         '\t@NamedQuery(name = "Rle.findAll", query = "SELECT o FROM Rle o ORDER BY o.nme"),\n' +
                         '\t@NamedQuery(name = "Rle.findById", query = "SELECT o FROM Rle o WHERE o.id = :id"),\n' +
-                        '\t@NamedQuery(name = "Rle.findByRle", query = "SELECT o FROM Rle o WHERE o.rle = :rle"),\n' +
+                        '\t@NamedQuery(name = "Rle.findByRle", query = "SELECT o FROM Rle o WHERE o.nme = :nme"),\n' +
                         '\t@NamedQuery(name = "Rle.findByEnabled", query = "SELECT o FROM Rle o WHERE o.enabled = :enabled ORDER BY o.nme"),\n' +
 
                         '\t@NamedQuery(name = "LoginUsrKnownLog.findAll", query = "SELECT o FROM LoginUsrKnownLog o ORDER BY o.id"),\n' +

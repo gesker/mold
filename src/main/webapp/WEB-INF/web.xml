@@ -91,8 +91,8 @@
         <auth-method>FORM</auth-method>
         <realm-name>moldDomain</realm-name>
         <form-login-config>
-            <form-login-page>/auth/validUser.xhtml</form-login-page>
-            <form-error-page>/auth/validUser.xhtml</form-error-page>
+            <form-login-page>/login.xhtml</form-login-page>
+            <form-error-page>/login.xhtml</form-error-page>
         </form-login-config>
     </login-config>
 

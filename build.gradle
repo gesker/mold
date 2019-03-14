@@ -5,8 +5,8 @@ plugins {
     id 'eclipse'
     id 'eclipse-wtp'
     id 'maven-publish'
-    id "com.diffplug.gradle.spotless" version "3.16.0"
-	id "com.bmuschko.cargo" version "2.4"
+    id "com.diffplug.gradle.spotless" version "3.19.0"
+	id "com.bmuschko.cargo" version "2.6.1"
 
 }
 
@@ -82,7 +82,7 @@ ext.wildflyArquillianVersion = "2.1.1.Final" // Unit Testing WildFly Specificall
 
 
 // Support Deployment
-ext.cargoVersion = "1.7.1" // Load Application to WildFly
+ext.cargoVersion = "1.7.3" // Load Application to WildFly
 
 
 //#####################################################################################################################
