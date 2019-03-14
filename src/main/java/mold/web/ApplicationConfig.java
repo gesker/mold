@@ -20,7 +20,7 @@ import javax.security.enterprise.identitystore.Pbkdf2PasswordHash;
 	    callerQuery = "SELECT usrpswd FROM usr_rle_map_view WHERE usrnme = ?",
 	    groupsQuery = "SELECT rlenme FROM usr_rle_map_view WHERE usrnme = ?",
 		hashAlgorithm = Pbkdf2PasswordHash.class,
-		priorityExpression = "#{100}",
+		priorityExpression = "10",
 		hashAlgorithmParameters = {
 				"Pbkdf2PasswordHash.Algorithm=PBKDF2WithHmacSHA512",
 				"Pbkdf2PasswordHash.Iterations=4096",
@@ -29,6 +29,7 @@ import javax.security.enterprise.identitystore.Pbkdf2PasswordHash;
 
 		}
 	)
+
 @FacesConfig
 @ApplicationScoped
 public class ApplicationConfig {

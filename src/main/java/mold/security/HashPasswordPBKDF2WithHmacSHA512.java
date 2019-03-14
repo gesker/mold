@@ -29,10 +29,7 @@ public class HashPasswordPBKDF2WithHmacSHA512 {
 
 
     public String getHashedText(String text) {
-
-        System.out.println("Input Text: " + text);
         String hashed = pbkdfHash.generate(text.toCharArray());
-        System.out.println("Hashed Text: " + hashed);
         return hashed;
     }
 

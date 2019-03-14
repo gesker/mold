@@ -14,7 +14,7 @@ import java.util.logging.Logger;
 @Singleton
 @Startup
 
-public class HashTryEJB {
+public class TryPBKDF2WithHmacSHA512EJB {
 
     private Logger logger = Logger.getLogger(this.getClass().getSimpleName());
 
@@ -30,15 +30,16 @@ public class HashTryEJB {
     @PostConstruct
     public void init() {
 
-        logger.info("initializing database...");
 
-        Map<String, String> parameters = new HashMap<>();
-        parameters.put("Pbkdf2PasswordHash.Iterations", "4096");
-        parameters.put("Pbkdf2PasswordHash.Algorithm", "PBKDF2WithHmacSHA512");
-        parameters.put("Pbkdf2PasswordHash.SaltSizeBytes", "64");
-        passwordHash.initialize(parameters);
+        Map<String, String> parametersMap = new HashMap<>();
+        parametersMap.put("Pbkdf2PasswordHash.Algorithm", "PBKDF2WithHmacSHA512");
+        parametersMap.put("Pbkdf2PasswordHash.Iterations", "4096");
+        parametersMap.put("Pbkdf2PasswordHash.KeySizeBytes", "64");
+        parametersMap.put("Pbkdf2PasswordHash.SaltSizeBytes", "64");
+        passwordHash.initialize(parametersMap);
 
         logger.warning(passwordHash.generate("password".toCharArray()));
+
     }
 
 }
