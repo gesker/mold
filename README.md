@@ -4,8 +4,9 @@
 
 ###### Technologies Used in this Project
 ```
-PostgreSQL 11 Database (BSD 2-clause "Simplified" License)
-Java EE 8  via the WildFly Container (LGPL 2.1 License)
-Primefaces for JSF (Apache License Version 2.0, January 2004)
+PostgreSQL Jdbc Driver -- BSD-2-Clause License
+MySQL Connector/J -- LGPLv2 License
+Java EE 8 via the WildFly Container -- LGPLv2.1 License
+Primefaces for JSF -- Apache License Version 2.0
 
 ```
