@@ -21,9 +21,8 @@ apply from: 'spotless.gradle'	// Code Formatter Tasks
 apply from: 'cargo.gradle'	// Deployment Tasks
 
 
-
 //defaultTasks 'clean', 'idea', 'eclipse', 'build', 'test', 'cargoRedeployRemote'
-defaultTasks 'determineEnv', 'clean', 'idea', 'eclipse', 'build', 'test'
+defaultTasks 'clean', 'idea', 'eclipse', 'build', 'test'
 
 String vendor = 'Dennis Gesker'
 String appName = 'mold'

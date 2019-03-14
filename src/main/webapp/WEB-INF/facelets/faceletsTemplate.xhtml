@@ -24,69 +24,12 @@
 
     <div id="head" style="position: relative; top: 0; width: 100%;">
         <f:view>
-
-            <h:form>
-
-                <p:graphicImage value="/resources/images/head.png" style="position: relative; top: 0;"/>
-
-                <p:menubar orientation="Horizontal" style="margin-top:20px">
-                    <p:menuitem value="Home" icon="ui-icon-home" url="/page/index.xhtml"/>
-
-                    <p:submenu label="User" icon="ui-icon-person">
-                        <p:menuitem value="Login" icon="ui-icon-unlocked"
-                                    actionListener="#{generalNavigationBean.goToLoginPage}"
-                                    rendered="#{!validUserBean.loggedIn}"/>
-                        <p:menuitem value="Logout #{request.userPrincipal.name}" icon="ui-icon-locked"
-                                    actionListener="#{validUserBean.logout()}" rendered="#{validUserBean.loggedIn}"/>
-                        <p:menuitem value="Request Password Reset" icon="ui-icon-arrowrefresh-1-e"
-                                    url="/auth/passwordResetRequest.xhtml"/>
-                    </p:submenu>
-
-                    <p:submenu label="Setup" icon="ui-icon-gear"
-                               rendered="#{validUserBean.loggedIn and (validUserBean.root or validUserBean.manager or validUserBean.admin)}">
-                        <p:menuitem value="User" icon="ui-icon-person" url="/page/setup/user.xhtml"/>
-                        <p:submenu label="User Security Mapping" icon="ui-icon-locked">
-                            <p:menuitem value="Map User to Customer" icon="ui-icon-wrench"
-                                        url="/page/setup/userCustomerMap.xhtml"/>
-                            <p:menuitem value="Map User to Engagement" icon="ui-icon-wrench"
-                                        url="/page/setup/userEngagementMap.xhtml"/>
-                            <p:menuitem value="Map User to Role" icon="ui-icon-wrench"
-                                        url="/page/setup/userRoleMap.xhtml"/>
-                        </p:submenu>
-                        <p:menuitem value="Customer" icon="ui-icon-star" url="/page/setup/customer.xhtml"/>
-                        <p:submenu label="Customer Configuration" icon="ui-icon-star">
-                            <p:menuitem value="Structure Configuration" icon="ui-icon-wrench"
-                                        url="/page/setup/customerConfigurationStructure.xhtml"/>
-                            <p:menuitem value="Owner-Operator Configuration" icon="ui-icon-wrench"
-                                        url="/page/setup/customerConfigurationOwnerOperator.xhtml"/>
-                            <p:menuitem value="Observation Configuration" icon="ui-icon-wrench"
-                                        url="/page/setup/customerConfigurationObservation.xhtml"/>
-                            <p:menuitem value="Work Action Configuration" icon="ui-icon-wrench"
-                                        url="/page/setup/customerConfigurationWorkAction.xhtml"/>
-                            <p:menuitem value="Equipment Configuration" icon="ui-icon-wrench"
-                                        url="/page/setup/customerConfigurationEquipment.xhtml"/>
-
-
-                        </p:submenu>
-
-                    </p:submenu>
-
-                    <p:menuitem value="Logout #{request.userPrincipal.name}" icon="ui-icon-locked"
-                                actionListener="#{validUserBean.logout()}" rendered="#{validUserBean.loggedIn}"/>
-
-                </p:menubar>
-                <br/>
-
-            </h:form>
-
             <p:messages id="pageMessages" showDetail="true" autoUpdate="true" closable="true"/>
-
-
         </f:view>
     </div>
 
     <div id="top" class="top">
-        <ui:insert name="top">Top of page BELOW header and head and ABOVE content</ui:insert>
+        <ui:insert name="top">Mold Template Application</ui:insert>
     </div>
 
     <div id="content">
@@ -95,12 +38,11 @@
 
     <div id="bottom" style="position: relative; bottom: 0; width: 100%;">
         <ui:insert name="foot">
-
             <p:panel style="text-align:center">
-                <a href="http://www.ito.org">ITO</a><br/>
+                <a href="http://dennis.gesker.com">Dennis Gesker</a><br/>
                 Montana, USA<br/>
+                <a href="https://github.com/gesker/mold">Copyright © Dennis Gesker Using GPLv3</a><br/>
             </p:panel>
-
         </ui:insert>
     </div>
 
