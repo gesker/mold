@@ -189,7 +189,7 @@ dependencies {
     
     // WildFly / Java EE
     providedCompile "javax:javaee-api:${javaEeVersion}"
-    providedCompile "javax.security.enterprise:javax.security.enterprise-api:1.0"
+    //providedCompile "javax.security.enterprise:javax.security.enterprise-api:1.0"
     providedCompile "org.wildfly:wildfly-spec-api:${wildflyVersion}"
 
     // PrimeFaces Core and Themes
@@ -278,7 +278,6 @@ dependencies {
 	cargo "org.wildfly.core:wildfly-controller-client:${wildflyCoreVersion}"
 
 
-    implementation 'junit:junit:4.12'
     implementation 'junit:junit:4.12'
 }
 
