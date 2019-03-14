@@ -15,10 +15,10 @@ sourceCompatibility = requiredVersion
 targetCompatibility = requiredVersion
 
 
-apply from: 'reverseDb.gradle'	// Generate JPA from Database
-apply from: 'compileAndTest.gradle'	// Build and Test Tasks
-apply from: 'spotless.gradle'	// Code Formatter Tasks
-apply from: 'cargo.gradle'	// Deployment Tasks
+apply from: 'build.reverseDb.gradle'	// Generate JPA from Database
+apply from: 'build.compileAndTest.gradle'	// Build and Test Tasks
+apply from: 'build.spotless.gradle'	// Code Formatter Tasks
+apply from: 'build.cargo.gradle'	// Deployment Tasks
 
 
 defaultTasks 'clean', 'idea', 'eclipse', 'build', 'test', 'cargoRedeployRemote'
