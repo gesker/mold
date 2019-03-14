@@ -26,7 +26,7 @@ defaultTasks 'clean', 'idea', 'eclipse', 'build', 'test', 'cargoRedeployRemote'
 
 String vendor = 'Dennis Gesker'
 String appName = 'mold'
-String description = 'Just an EE8 Template'
+String description = 'Just a Java EE8 Template'
 String version = '1.0'
 
 ext.requiredVersion = JavaVersion.VERSION_11
