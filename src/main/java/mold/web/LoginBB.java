@@ -21,8 +21,8 @@ import java.util.logging.Logger;
 @Named
 @RequestScoped
 public class LoginBB {
-	
-	Logger logger = Logger.getLogger(this.getClass().getSimpleName());
+
+    Logger logger = Logger.getLogger(this.getClass().getSimpleName());
 
     @NotEmpty
     @Size(min = 8, message = "Password must have at least 8 characters")
@@ -61,16 +61,16 @@ public class LoginBB {
     }
 
     private AuthenticationStatus continueAuthentication() {
-    	
-    	logger.info(email + " " + password);
-    	
+
+        logger.info(email + " " + password);
+
         return securityContext.authenticate(
                 (HttpServletRequest) externalContext.getRequest(),
                 (HttpServletResponse) externalContext.getResponse(),
                 AuthenticationParameters.withParams().credential(new UsernamePasswordCredential(email, password))
-  
+
         );
-        
+
     }
 
     public String getPassword() {
@@ -78,7 +78,7 @@ public class LoginBB {
     }
 
     public void setPassword(String password) {
-    	logger.info(password);
+        logger.info(password);
         this.password = password;
     }
 
@@ -87,7 +87,7 @@ public class LoginBB {
     }
 
     public void setEmail(String email) {
-    	logger.info(email);
+        logger.info(email);
         this.email = email;
     }
 }

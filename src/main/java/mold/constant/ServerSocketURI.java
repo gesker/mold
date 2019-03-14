@@ -6,15 +6,12 @@ import java.util.logging.Logger;
 
 
 public class ServerSocketURI {
-    private Logger logger = Logger.getLogger(this.getClass().getName());
     public static final ServerSocketURI INSTANCE = new ServerSocketURI();
     private static final String DEV_WORKSTATION = "drg-nix"; // Development Workstation
-    private static final String DEV_NOTEBOOK= "drg-nbk"; // Development Notebook
+    private static final String DEV_NOTEBOOK = "drg-nbk"; // Development Notebook
     private static final String ECHO_WS_LOCALHOST = "http://localhost:8080/web/echoSWS";
     private static final String ECHO_WS_STAGE = "http://stage.server.mold:8080/web/echoSWS";
-
-
-
+    private Logger logger = Logger.getLogger(this.getClass().getName());
     private String host = null;
 
     public ServerSocketURI() {

@@ -3,14 +3,9 @@ package mold.security;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-
-import mold.security.HashPasswordPBKDF2WithHmacSHA512;
-
-import javax.security.enterprise.identitystore.Pbkdf2PasswordHash;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.logging.Logger;
+
+import static org.junit.Assert.assertEquals;
 
 @Ignore
 public class HashPasswordPBKDF2WithHmacSHA512Test {

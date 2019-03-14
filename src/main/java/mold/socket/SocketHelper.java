@@ -45,7 +45,7 @@ public class SocketHelper {
     }
 
     public Session setupSessionVariables(Session session) {
-    	logger.info(String.format("SocketTest >>> My Object is of type ...." + session.getClass()));
+        logger.info(String.format("SocketTest >>> My Object is of type ...." + session.getClass()));
         logger.info("SocketTest >>> webSocketSession (connectToServer)");
         session
                 .getUserProperties()

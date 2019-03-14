@@ -1,6 +1,5 @@
 package mold.security;
 
-import javax.inject.Inject;
 import javax.security.enterprise.identitystore.Pbkdf2PasswordHash;
 import java.util.HashMap;
 import java.util.Map;
@@ -15,7 +14,7 @@ public class HashPasswordPBKDF2WithHmacSHA512 {
         this.init();
     }
 
-    private void init(){
+    private void init() {
 
         Map<String, String> parametersMap = new HashMap<>();
         parametersMap.put("Pbkdf2PasswordHash.Algorithm", "PBKDF2WithHmacSHA512");

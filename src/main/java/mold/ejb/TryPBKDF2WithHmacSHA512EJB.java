@@ -1,12 +1,10 @@
 package mold.ejb;
 
 import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
-import javax.ejb.Startup;
 import javax.ejb.Singleton;
+import javax.ejb.Startup;
 import javax.inject.Inject;
 import javax.security.enterprise.identitystore.Pbkdf2PasswordHash;
-import javax.sql.DataSource;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -19,12 +17,8 @@ public class TryPBKDF2WithHmacSHA512EJB {
     private Logger logger = Logger.getLogger(this.getClass().getSimpleName());
 
 
-
     @Inject
     private Pbkdf2PasswordHash passwordHash;
-
-
-
 
 
     @PostConstruct

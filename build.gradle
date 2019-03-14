@@ -15,14 +15,14 @@ sourceCompatibility = requiredVersion
 targetCompatibility = requiredVersion
 
 
-//apply from: 'reverseDb.gradle'	// Generate JPA from Database
+apply from: 'reverseDb.gradle'	// Generate JPA from Database
 apply from: 'compileAndTest.gradle'	// Build and Test Tasks
 apply from: 'spotless.gradle'	// Code Formatter Tasks
 apply from: 'cargo.gradle'	// Deployment Tasks
 
 
-//defaultTasks 'clean', 'idea', 'eclipse', 'build', 'test', 'cargoRedeployRemote'
-defaultTasks 'clean', 'idea', 'eclipse', 'build', 'test'
+defaultTasks 'clean', 'idea', 'eclipse', 'build', 'test', 'cargoRedeployRemote'
+
 
 String vendor = 'Dennis Gesker'
 String appName = 'mold'
@@ -51,8 +51,6 @@ ext.hibernateAnnotationVersion = "5.0.4.Final" // Matches the Hibernate version 
 
 // Library Hibernate Reverse Engineer
 ext.hibernateToolsVersion = "5.3.7.Final" // Used only to Reverse Engineer Database to Java POJOs
-//ext.hibernateRevEngVersion = "5.1.10.Final" // Used only to Reverse Engineer Database to Java POJOs
-//ext.hibernateToolsRevEngVersion = "5.2.6.Final"  // Used only to Reverse Engineer Database to Java POJOs
 ext.hibernateRevEngVersion = "5.3.7.Final" // Used only to Reverse Engineer Database to Java POJOs
 ext.hibernateToolsRevEngVersion = "5.4.1.Final"  // Used only to Reverse Engineer Database to Java POJOs
 

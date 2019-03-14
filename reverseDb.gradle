@@ -1,0 +1,649 @@
+task reverseDbScriptDescription() {
+    ant.echo("Store all hibernate reverse engineering code outside of the main build script")
+}
+
+
+
+////#####################################################################################################################
+////################################# Define Some Extra Path Variables  #################################################
+////#####################################################################################################################
+def allSqlFile = new File('src' + System.getProperty("file.separator") + 'sql' + System.getProperty("file.separator") + 'AllSql.sql')
+def sqlDir = new File('src' + System.getProperty("file.separator") + 'sql')
+
+def hibernateDir = new File('.' + System.getProperty("file.separator") + 'src' + System.getProperty("file.separator") + 'hibernate')
+def hibernateOutputDir = new File('.' + System.getProperty("file.separator") + 'src' + System.getProperty("file.separator") + 'main' + System.getProperty("file.separator") + 'java')
+
+def HibernateCfgXml = new File('.' + System.getProperty("file.separator") + 'src' + System.getProperty("file.separator") + 'hibernate' + System.getProperty("file.separator") + 'hibernate.cfg.xml')
+def HibernateRevengXml = new File('.' + System.getProperty("file.separator") + 'src' + System.getProperty("file.separator") + 'hibernate' + System.getProperty("file.separator") + 'hibernate.reveng.xml')
+def HibernateCfgProperties = new File('.' + System.getProperty("file.separator") + 'src' + System.getProperty("file.separator") + 'hibernate' + System.getProperty("file.separator") + 'hibernate.cfg.properties')
+def JpaDir = new File('.' + System.getProperty("file.separator") + 'src' + System.getProperty("file.separator") + 'main' + System.getProperty("file.separator") + 'java' + System.getProperty("file.separator") + 'mold' + System.getProperty("file.separator") + 'data' + System.getProperty("file.separator") + 'jpa')
+
+////#####################################################################################################################
+////################################# Delete Old JPA Object #############################################################
+////#####################################################################################################################
+task deleteJpaObjectsFromLastRun() {
+    doLast {
+        ant.echo("deleteJpaObjectsFromLastRun")
+        ant.delete(verbose: true, failonerror: false) {
+            fileset(dir: JpaDir) {
+                include(name: '**/*.java')
+            }
+        }
+    }
+}
+
+////#####################################################################################################################
+////################################# All SQL into 1 File ###############################################################
+////#####################################################################################################################
+task concatSql(dependsOn: deleteJpaObjectsFromLastRun) {
+
+    doFirst {
+        //Delete the composite file if it exists
+        if (allSqlFile.exists()) {
+            allSqlFile.delete()
+        }
+
+        ant.concat(
+                destfile: allSqlFile,
+                append: "false"
+        ) {
+            fileset(dir: sqlDir) {
+                include(name: '**/*.sql')
+//                exclude(name: '**/*cb_2015*.sql')
+//                exclude(name: '**/*gps_multipolygon*.sql')
+                exclude(name: 'AllSql.sql')
+
+            }
+        }
+
+    }
+}
+
+////#####################################################################################################################
+////################################# Run All SQL on LocalHost ##########################################################
+////#####################################################################################################################
+task executeSqlLocalhost(dependsOn: concatSql) {
+    doLast {
+        ant.sql(
+                driver: "org.postgresql.Driver",
+                url: "jdbc:postgresql://localhost:5432/${dbName}",
+                userid: "wildfly",
+                password: "wildfly",
+                src: allSqlFile,
+                encoding: "UTF-8",
+                //expandproperties: false,
+                //escapeprocessing: true,
+                //delimitertype: '$$$$',
+                keepformat: true,
+                delimitertype: 'row'
+
+        ) {
+            classpath {
+                pathelement(path: configurations.compileOnly.asPath)
+                pathelement(path: configurations.providedCompile.asPath)
+            }
+        }
+    }
+}
+
+////#####################################################################################################################
+////################################# Reverse Engineer  #################################################################
+////#####################################################################################################################
+task reverseEngineerJpaObjectsFromDb(dependsOn: executeSqlLocalhost) {
+
+    doLast {
+        ant.echo(hibernateDir)
+        ant.echo(hibernateOutputDir)
+        ant.echo(HibernateCfgXml)
+        ant.echo(HibernateRevengXml)
+        ant.echo(HibernateCfgProperties)
+        ant.echo(JpaDir)
+
+
+
+        ant.taskdef(name: 'hibernatetool',
+                classname: 'org.hibernate.tool.ant.HibernateToolTask',
+                classpath: configurations.compileOnly.asPath
+        )
+
+        ant.hibernatetool(destdir: hibernateOutputDir) {
+
+            jdbcconfiguration(
+                    packagename: 'mold.data.jpa',
+                    revengfile: HibernateRevengXml.path,
+                    //configurationfile: HibernateCfgXml.path,
+                    propertyfile: HibernateCfgProperties.path,
+                    detectmanytomany: true,
+                    detectoptimisticlock: true
+            )
+
+            hbm2java(jdk5: true, ejb3: true)
+                classpath {
+                    pathelement(path: configurations.compileOnly.asPath)
+                    pathelement(path: configurations.providedCompile.asPath)
+                }
+            
+
+        }
+    }
+}
+
+////#####################################################################################################################
+////################################# Tweak Reverse Engineered JPA Code  ################################################
+////#####################################################################################################################
+//// The GUI JPA reverse engineer tool in NetBeans offers some options that weren't obvious to me in the Hibernate
+//// Ant Task Tool so I'm going to tweek the generated JPA files a bit for use with PostgreSql and for use in JSON
+//// Marshall/UnMarshall
+task tweakJpaObjects(dependsOn: reverseEngineerJpaObjectsFromDb) {
+    doLast {
+        // Add a 'static final long serialVersionUID' to help with serialization
+        // Not sure I need it but Serialization docs seem to think it's helpful
+        ant.replaceregexp(
+                match: 'private Integer id;',
+                replace: 'static final long serialVersionUID = 1L;\n\t private Integer id;',
+        ) {
+            fileset(dir: JpaDir) {
+                include(name: '**/*.java')
+            }
+        }
+
+        // Get rid of the Hibernate Tool comment line
+        // Makes for too many commits in my git repository
+        ant.replaceregexp(
+                match: '^.*by Hibernate Tools.*$',
+                replace: '',
+                flags: 'm'
+        ) {
+            fileset(dir: JpaDir) {
+                include(name: '**/*.java')
+            }
+        }
+
+        // Get rid of the Hibernate Tool comment line
+        // Makes for too many commits in my git repository
+        ant.replaceregexp(
+                match: '^.*generated by hbm2java.*$',
+                replace: '',
+                flags: 'm'
+        ) {
+            fileset(dir: JpaDir) {
+                include(name: '**/*.java')
+            }
+        }
+
+        /////////////////////////////////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////
+        /////////////  Make Sure All Classes have Essential Packages  ///////
+        /////////////////////////////////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////
+        ant.replace(
+                token: "package mold.data.jpa;",
+                value: 'package mold.data.jpa;\nimport java.util.*;\nimport javax.persistence.*;\nimport javax.enterprise.inject.Vetoed;\n',
+                failOnNoReplacements: "true"
+        ) {
+            fileset(dir: JpaDir) {
+                include(name: '**/*.java')
+            }
+        }
+
+        /////////////////////////////////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////
+        ///////////// Using SEQUENCE instead of IDENTITY         ////////////
+        ///////////// Leaving the commented out code below just /////////////
+        ///////////// for future reference on how to add it     /////////////
+        ///////////// Soft Delete ///////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////
+
+        ant.replace(
+                token: "package mold.data.jpa;",
+                value: 'package mold.data.jpa;\nimport org.hibernate.annotations.SQLDelete;\n',
+                failOnNoReplacements: "true"
+        ) {
+            fileset(dir: JpaDir) {
+                include(name: '**/*.java')
+                exclude(name: '**/*View.java')
+            }
+        }
+
+        // Use Sequences -- Step One -- Add Sequence Generator Tag to Class
+        ant.replaceregexp(
+                match: '@Table(.*)name="(.*)"(.*)schema(.*)public class',
+                replace: '@Table\\1name="\\2"\\3schema\\4\n@SQLDelete( sql = "UPDATE \\2 SET enabled = false WHERE id = ?")\n@SequenceGenerator(name="\\2_id_seq", sequenceName="\\2_id_seq", initialValue=1, allocationSize=1)\npublic class',
+                flags: 's',
+                byline: 'false'
+        ) {
+            fileset(dir: JpaDir) {
+                include(name: '**/*.java')
+                exclude(name: '**/*View.java')
+            }
+        }
+
+        // Use Sequences -- Step Two -- Add Generated Value Tag to @Id
+        ant.replaceregexp(
+                match: '@Table(.*)name="(.*)"(.*)schema(.*)@Id',
+                replace: '@Table\\1name="\\2"\\3schema\\4@Id\n@GeneratedValue(strategy = GenerationType.SEQUENCE, generator="\\2_id_seq")',
+                flags: 's',
+                byline: 'false'
+        ) {
+            fileset(dir: JpaDir) {
+                include(name: '**/*.java')
+                exclude(name: '**/*View.java')
+            }
+        }
+
+        //////////////////////////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////////////////////
+        /////////////  CDI 2 @Vetoed on JPA Objects //////////////////////////////////
+        //////////////////////////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////////////////////
+        // Add Immutable Tag
+        ant.replace(
+                token: "@Entity",
+                value: '@Vetoed\n@Entity',
+                failOnNoReplacements: "true"
+        ) {
+            fileset(dir: JpaDir) {
+                include(name: '**/*.java')
+            }
+        }
+
+        //////////////////////////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////////////////////
+        /////////////  Make Reference Tables and Views Immutable -- Read-Only ////////
+        //////////////////////////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////////////////////
+        // Add Immutable Tag
+        ant.replace(
+                token: "@Entity",
+                value: '@Immutable\n@Entity',
+                failOnNoReplacements: "true"
+        ) {
+            fileset(dir: JpaDir) {
+                include(name: '**/*View.java')
+                
+            }
+        }
+
+        // Import Immutable Package
+        ant.replace(
+                token: "package mold.data.jpa;",
+                value: 'package mold.data.jpa;\nimport org.hibernate.annotations.Immutable;\n',
+                failOnNoReplacements: "false"
+        ) {
+            fileset(dir: JpaDir) {
+                include(name: '**/*View.java')
+            }
+        }
+
+        /////////////////////////////////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////
+        /////////////   Make Tables Audited -- See What Changed  /////////////
+        /////////////////////////////////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////
+
+        //Add Audited Tag
+        ant.replace(
+                token: "@Entity",
+                value: '@Audited\n@Entity',
+                failOnNoReplacements: "true"
+        ) {
+            fileset(dir: hibernateOutputDir) {
+                include(name: '**/*.java')
+                // Not Views or Reference Tables
+                exclude(name: '**/*View.java')
+                exclude(name: '**/LoginCode.java')
+            }
+        }
+
+        ant.replace(
+                token: "@Entity",
+                value: '@Audited(targetAuditMode=RelationTargetAuditMode.NOT_AUDITED)\n@Entity',
+                failOnNoReplacements: "true"
+        ) {
+            fileset(dir: hibernateOutputDir) {
+                include(name: '**/*View.java')
+                include(name: '**/LoginCode.java')
+            }
+        }
+
+        // Import Audited Package
+        ant.replace(
+                token: "package mold.data.jpa;",
+                value: 'package mold.data.jpa;\nimport org.hibernate.envers.Audited;',
+                failOnNoReplacements: "true"
+        ) {
+            fileset(dir: hibernateOutputDir) {
+                include(name: '**/*.java')
+            }
+        }
+
+        ant.replace(
+                token: "package mold.data.jpa;",
+                value: 'package mold.data.jpa;\nimport org.hibernate.envers.RelationTargetAuditMode;',
+                failOnNoReplacements: "true"
+        ) {
+            fileset(dir: hibernateOutputDir) {
+                include(name: '**/*View.java')
+                include(name: '**/LoginCode.java')
+            }
+        }
+
+
+
+        /////////////////////////////////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////
+        /////////////   Handle Created and Modified TimeStamps  /////////////
+        /////////////////////////////////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////
+        // Add CreationTimestamp Tag
+        ant.replace(
+                token: '@Column(name="created", length=35)',
+                value: '@Column(name="created", length=35) @CreationTimestamp',
+                failOnNoReplacements: "true"
+        ) {
+            fileset(dir: JpaDir) {
+                include(name: '**/*.java')
+            }
+        }
+
+        // Add CreationTimestamp and UpdateTimestamp Tag
+        ant.replace(
+                token: '@Column(name="modified", length=35)',
+                value: '@Column(name="modified", length=35) @UpdateTimestamp',
+                failOnNoReplacements: "true"
+        ) {
+            fileset(dir: JpaDir) {
+                include(name: '**/*.java')
+            }
+        }
+
+        //Import CreationTimestamp and UpdateTimestamp Packages
+        ant.replace(
+                token: "package mold.data.jpa;",
+                value: 'package mold.data.jpa;\nimport org.hibernate.annotations.CreationTimestamp;\nimport org.hibernate.annotations.UpdateTimestamp;',
+                failOnNoReplacements: "true"
+        ) {
+            fileset(dir: JpaDir) {
+                include(name: '**/*.java')
+            }
+        }
+
+
+
+        /////////////////////////////////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////
+        /////////////   Handle GIS Types  ///////////////////////////////////
+        /////////////////////////////////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////
+
+
+
+        // Points X, Y, Z -- i.e Points with Elevation
+        ant.replace(
+                token: "@Column(name=\"geom\")",
+                value: "@Column(name=\"geom\", columnDefinition = \"geometry(Point,4326)\")",
+                failOnNoReplacements: "false"
+        ) {
+            fileset(dir: JpaDir) {
+                include(name: '**/Facility.java')
+            }
+        }
+
+        // MultiPolygon
+        ant.replace(
+                token: "@Column(name=\"geom\")",
+                value: "@Column(name=\"geom\", columnDefinition = \"geometry(MultiPolygon,4326)\")",
+                failOnNoReplacements: "false"
+        ) {
+            fileset(dir: JpaDir) {
+                include(name: '**/Cb2015UsCounty20m.java')
+                include(name: '**/Cb2015UsState20m.java')
+                include(name: '**/Cb2015UsUa10500k.java')
+                include(name: '**/Cb2015UsZcta510500k.java')
+                include(name: '**/GpsMultipolygonCountyView.java')
+                include(name: '**/GpsMultipolygonStateView.java')
+                include(name: '**/GpsMultipolygonUrbanView.java')
+                include(name: '**/GpsMultipolygonZipcodeView.java')
+            }
+        }
+
+
+       //////////////////////////////////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////
+        /////////////   Handle PostgreSQL UUID Types  ///////////////////////
+        /////////////////////////////////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////
+
+        // Import UUID Package
+        ant.replace(
+                token: "package mold.data.jpa;",
+                value: 'package mold.data.jpa;\nimport java.util.UUID;',
+                failOnNoReplacements: "true"
+        ) {
+            fileset(dir: JpaDir) {
+                include(name: '**/*.java')
+            }
+        }
+
+        ant.replace(
+                token: "Serializable uid",
+                value: 'UUID uid',
+                failOnNoReplacements: "true"
+        ) {
+            fileset(dir: JpaDir) {
+                include(name: '**/*.java')
+            }
+        }
+
+        ant.replace(
+                token: "Serializable getUid(",
+                value: "UUID getUid(",
+                failOnNoReplacements: "true"
+        ) {
+            fileset(dir: JpaDir) {
+                include(name: '**/*.java')
+            }
+        }
+
+
+        ant.replace(
+                token: "@Column(name=\"uid\", unique=true, nullable=false)",
+                value: "@Column(name=\"uid\", columnDefinition = \"UUID\", unique=true, nullable=false, updatable=true)",
+                failOnNoReplacements: "true"
+        ) {
+            fileset(dir: JpaDir) {
+                include(name: '**/*.java')
+            }
+        }
+
+
+
+
+
+
+
+        /////////////////////////////////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////
+        ///////////// Convert Set to List                        ////////////
+        /////////////////////////////////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////
+
+        // Convert Set to List Part 1
+        ant.replace(
+                token: "java.util.Set",
+                value: "java.util.List",
+                failOnNoReplacements: "false"
+        ) {
+            fileset(dir: JpaDir) {
+                include(name: '**/*.java')
+            }
+        }
+
+        // Convert Set to List Part 2
+        ant.replace(
+                token: "Set<",
+                value: "List<",
+                failOnNoReplacements: "false"
+        ) {
+            fileset(dir: JpaDir) {
+                include(name: '**/*.java')
+            }
+        }
+
+        // Convert Set to List Part 3
+        ant.replace(
+                token: "java.util.HashSet",
+                value: "java.util.ArrayList",
+                failOnNoReplacements: "false"
+        ) {
+            fileset(dir: JpaDir) {
+                include(name: '**/*.java')
+            }
+        }
+
+        // Convert HashList to ArrayList
+        ant.replace(
+                token: "HashList<", //
+                value: "ArrayList<",
+                failOnNoReplacements: "false"
+        ) {
+            fileset(dir: JpaDir) {
+                include(name: '**/*.java')
+            }
+        }
+
+        // Make sure all ArrayList(s) are synchronized Part 1
+        ant.replace(
+                token: "new ArrayList<",
+                value: "Collections.synchronizedList(new ArrayList<",
+                failOnNoReplacements: "false"
+        ) {
+            fileset(dir: JpaDir) {
+                include(name: '**/*.java')
+            }
+        }
+
+        // Make sure all ArrayList(s) are synchronized Part 2
+        ant.replace(
+                token: ">(0);",
+                value: ">(0));",
+                failOnNoReplacements: "false"
+        ) {
+            fileset(dir: JpaDir) {
+                include(name: '**/*.java')
+            }
+        }
+
+        // Enforce CascadeType.ALL
+        ant.replace(
+                token: "@OneToMany(fetch",
+                value: "@OneToMany(cascade=CascadeType.ALL, fetch",
+                failOnNoReplacements: "false"
+
+        ) {
+            fileset(dir: JpaDir) {
+                include(name: '**/*.java')
+            }
+        }
+
+        // Remove whitespace at end of lines
+        ant.replaceregexp(
+                match: '([^ \\t\\r\\n])[ \\t]+$',
+                replace: '\\1',
+                flags: 'm',
+                byline: 'false'
+        ) {
+            fileset(dir: JpaDir) {
+                include(name: '**/*.java')
+            }
+        }
+    }
+}
+
+task tweakJpaObjectsAddQueries(dependsOn: tweakJpaObjects) {
+    doLast {
+
+
+        ant.replace(
+                failOnNoReplacements: "true",
+                token: "package mold.data.jpa;",
+                value: 'package mold.data.jpa;\nimport mold.data.obj.*;'
+        ){
+            fileset(dir: JpaDir) {
+                include(name: '**/Aaaaaa.java')
+            }
+        }
+
+        // Manually add some NamedQueries
+        ant.replace(
+                failOnNoReplacements: "true",
+                token: "@Entity",
+                value: '@NamedQueries(value = {\n' +
+
+                        '\t@NamedQuery(name = "LoginCode.findAll", query = "SELECT o FROM LoginCode o ORDER BY o.id"),\n' +
+                        '\t@NamedQuery(name = "LoginCode.findById", query = "SELECT o FROM LoginCode o WHERE o.id = :id"),\n' +
+
+                        '\t@NamedQuery(name = "Usr.findAll", query = "SELECT o FROM Usr o ORDER BY o.nme"),\n' +
+                        '\t@NamedQuery(name = "Usr.findByNme", query = "SELECT o FROM Usr o WHERE o.nme = :nme"),\n' +
+                        '\t@NamedQuery(name = "Usr.findById", query = "SELECT o FROM Usr o WHERE o.id = :id"),\n' +
+                        '\t@NamedQuery(name = "Usr.findByEnabled", query = "SELECT o FROM Usr o WHERE o.enabled = :enabled ORDER BY o.nme"),\n' +
+
+                        '\t@NamedQuery(name = "Aaaaaa.findAll", query = "SELECT o FROM Aaaaaa o ORDER BY o.id"),\n' +
+                        '\t@NamedQuery(name = "Aaaaaa.findById", query = "SELECT o FROM Aaaaaa o WHERE o.id = :id"),\n' +
+
+                        '\t@NamedQuery(name = "Rle.findAll", query = "SELECT o FROM Rle o ORDER BY o.nme"),\n' +
+                        '\t@NamedQuery(name = "Rle.findById", query = "SELECT o FROM Rle o WHERE o.id = :id"),\n' +
+                        '\t@NamedQuery(name = "Rle.findByRle", query = "SELECT o FROM Rle o WHERE o.rle = :rle"),\n' +
+                        '\t@NamedQuery(name = "Rle.findByEnabled", query = "SELECT o FROM Rle o WHERE o.enabled = :enabled ORDER BY o.nme"),\n' +
+
+                        '\t@NamedQuery(name = "LoginUsrKnownLog.findAll", query = "SELECT o FROM LoginUsrKnownLog o ORDER BY o.id"),\n' +
+                        '\t@NamedQuery(name = "LoginUsrKnownLog.findById", query = "SELECT o FROM LoginUsrKnownLog o WHERE o.id = :id"),\n' +
+
+                        '\t@NamedQuery(name = "LoginUsrUnknownLog.findAll", query = "SELECT o FROM LoginUsrUnknownLog o ORDER BY o.id"),\n' +
+                        '\t@NamedQuery(name = "LoginUsrUnknownLog.findById", query = "SELECT o FROM LoginUsrUnknownLog o WHERE o.id = :id"),\n' +
+
+                        '\t@NamedQuery(name = "UsrRleMap.unmapUsrFromRle", query = "DELETE FROM UsrRleMap c WHERE c.usrByUsrId = :usr AND c.rle IN (:roleList)"),\n' +
+                        '\t@NamedQuery(name = "UsrRleMap.usrUnmappedForRle", query = "SELECT c FROM Rle c WHERE c NOT IN (SELECT b.rle FROM UsrRleMap b WHERE b.usrByUsrId = :usr)")\n' +
+
+
+                        '})\n@Entity'
+        ) {
+            fileset(dir: JpaDir) {
+                include(name: '**/Aaaaaa.java')
+            }
+        }
+
+
+
+//        ant.replace(
+//                failOnNoReplacements: "true",
+//                token: "@NamedQueries",
+//                value: '@SqlResultSetMappings({\n' +
+//
+//                        '\t@SqlResultSetMapping(name = "customerItemResult", classes = { @ConstructorResult(targetClass = CustomerItem.class, columns = { @ColumnResult(name = "customernumber"), @ColumnResult(name ="customername")})})\n' +
+//
+//
+//                        '})\n@NamedQueries'
+//        ) {
+//            fileset(dir: JpaDir) {
+//                include(name: '**/Aaaaaa.java')
+//            }
+//        }
+
+
+
+
+    }
+
+}
+
+//#####################################################################################################################
+//################################# Run All SQL and Reverse Engineering Tasks  ########################################
+//#####################################################################################################################
+task reveng(dependsOn: tweakJpaObjectsAddQueries) {
+    doLast {
+        ant.echo('Run All SQL and Reverse Engineering Tasks')
+    }
+}
