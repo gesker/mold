@@ -4,13 +4,13 @@ import javax.security.enterprise.identitystore.Pbkdf2PasswordHash;
 import java.util.HashMap;
 import java.util.Map;
 
-public class HashPasswordPBKDF2WithHmacSHA512 {
+public class HashPBKDF2WithHmacSHA512 {
 
 
     Pbkdf2PasswordHash pbkdfHash;
 
 
-    public HashPasswordPBKDF2WithHmacSHA512() {
+    public HashPBKDF2WithHmacSHA512() {
         this.init();
     }
 
@@ -20,7 +20,7 @@ public class HashPasswordPBKDF2WithHmacSHA512 {
         parametersMap.put("Pbkdf2PasswordHash.Algorithm", "PBKDF2WithHmacSHA512");
         parametersMap.put("Pbkdf2PasswordHash.Iterations", "4096");
         parametersMap.put("Pbkdf2PasswordHash.KeySizeBytes", "64");
-        parametersMap.put("Pbkdf2PasswordHash.SaltSizeBytes", "64");
+        //parametersMap.put("Pbkdf2PasswordHash.SaltSizeBytes", "64");
 
         pbkdfHash.initialize(parametersMap);
 

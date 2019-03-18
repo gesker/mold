@@ -3,7 +3,6 @@ package mold.web.page.setup;
 import mold.constant.WildFlyContainerConstant;
 import mold.data.jpa.Usr;
 
-import javax.enterprise.context.RequestScoped;
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
@@ -17,15 +16,15 @@ import java.util.logging.Logger;
 @SessionScoped
 public class UsrBB implements Serializable {
 
-    Logger logger = Logger.getLogger(this.getClass().getSimpleName());
     @PersistenceContext(unitName = WildFlyContainerConstant.JAVAEE_PERSISTANCE_UNIT)
     protected EntityManager em;
-
+    Logger logger = Logger.getLogger(this.getClass().getSimpleName());
     List<Usr> usrList;
 
+    @SuppressWarnings("unchecked")
     public List<Usr> getUsrList() {
-        Query qryAllUsers = em.createNamedQuery("Usr.findAll");
-        usrList = qryAllUsers.getResultList();
+        Query qry = em.createNamedQuery("Usr.findAll");
+        usrList = (List<Usr>) qry.getResultList();
         String msg = "Size of usrList is: " + usrList.size();
         logger.warning(msg);
         return usrList;

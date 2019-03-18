@@ -5,11 +5,11 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.logging.Logger;
 
-public class HashPasswordSha512Base64 {
+public class HashSha512Base64 {
 
     private Logger logger = Logger.getLogger(this.getClass().getSimpleName());
 
-    public HashPasswordSha512Base64() {
+    public HashSha512Base64() {
     }
 
 
@@ -30,11 +30,8 @@ public class HashPasswordSha512Base64 {
     }
 
 
-
-
-
     public boolean isHashedTextMatch(String plainText, String hashedText) {
-        if (this.getHashedText(plainText).equals(hashedText)){
+        if (this.getHashedText(plainText).equals(hashedText)) {
             return true;
         }
         return false;
