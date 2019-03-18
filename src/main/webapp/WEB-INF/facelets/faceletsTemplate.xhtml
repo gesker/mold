@@ -25,6 +25,21 @@
     <div id="head" style="position: relative; top: 0; width: 100%;">
         <f:view>
             <p:messages id="pageMessages" showDetail="true" closable="true"/>
+            <h:form>
+                <p:menubar orientation="Horizontal" style="margin-top:20px">
+                    <p:menuitem value="Home" icon="ui-icon-home" url="/page/index.xhtml"/>
+
+                    <p:submenu label="User" icon="ui-icon-person">
+                        <p:menuitem value="Login" icon="ui-icon-unlocked" url="/page/index.xhtml"/>
+                        <p:menuitem value="Logout #{request.userPrincipal.name}" icon="ui-icon-locked" actionListener="#{logoutBB.submit()}"/>
+                    </p:submenu>
+
+                    <p:submenu label="Setup" icon="ui-icon-gear">
+                        <p:menuitem value="Add User" icon="ui-icon-person" url="/page/setup/index.xhtml"/>
+                    </p:submenu>
+
+                </p:menubar>
+            </h:form>
         </f:view>
     </div>
 
