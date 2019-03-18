@@ -1,13 +1,11 @@
 package mold.web.page.setup;
 
-import mold.constant.WildFlyContainerConstant;
 import mold.data.jpa.Usr;
+import mold.ejb.AuthEJB;
 
+import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Named;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
 import java.io.Serializable;
 import java.util.List;
 import java.util.logging.Logger;
@@ -16,15 +14,15 @@ import java.util.logging.Logger;
 @SessionScoped
 public class UsrBB implements Serializable {
 
-    @PersistenceContext(unitName = WildFlyContainerConstant.JAVAEE_PERSISTANCE_UNIT)
-    protected EntityManager em;
+    @EJB
+    AuthEJB authEJB;
+
     Logger logger = Logger.getLogger(this.getClass().getSimpleName());
     List<Usr> usrList;
 
     @SuppressWarnings("unchecked")
     public List<Usr> getUsrList() {
-        Query qry = em.createNamedQuery("Usr.findAll");
-        usrList = (List<Usr>) qry.getResultList();
+        usrList = authEJB.retrieveUsrs();
         String msg = "Size of usrList is: " + usrList.size();
         logger.warning(msg);
         return usrList;

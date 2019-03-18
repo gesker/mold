@@ -23,7 +23,6 @@ public class TryPBKDF2WithHmacSHA512EJB {
     @PostConstruct
     public void init() {
 
-
         Map<String, String> parametersMap = new HashMap<>();
         parametersMap.put("Pbkdf2PasswordHash.Algorithm", "PBKDF2WithHmacSHA512");
         parametersMap.put("Pbkdf2PasswordHash.Iterations", "4096");
