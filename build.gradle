@@ -46,13 +46,12 @@ ext.wildflyCoreVersion = "7.0.0.Final" // Wildfly Version
 
 // Library Hibernate
 ext.hibernateVersion = "5.3.7.Final" // Matches the Hibernate version in Wildfly 15.0.1
+ext.hibernateToolsRevEngVersion = "5.4.1.Final"  // Used only to Reverse Engineer Database to Java POJOs
 ext.hibernateValidatorVersion = "6.0.14.Final" // Matches the Hibernate version in Wildfly 15.0.1
 ext.hibernateAnnotationVersion = "5.0.4.Final" // Matches the Hibernate version in Wildfly 15.0.1
 
-// Library Hibernate Reverse Engineer
-ext.hibernateToolsVersion = "5.3.7.Final" // Used only to Reverse Engineer Database to Java POJOs
-ext.hibernateRevEngVersion = "5.3.7.Final" // Used only to Reverse Engineer Database to Java POJOs
-ext.hibernateToolsRevEngVersion = "5.4.1.Final"  // Used only to Reverse Engineer Database to Java POJOs
+
+
 
 // Library GIS
 ext.geolatteVersion = "1.3.0" // Matches the Hibernate version in Wildfly 15.0.1 -- manually added by drg
@@ -146,33 +145,30 @@ repositories {
 //#####################################################################################################################
 dependencies {
 
-    //# Reverse Engineer #
-    //# Compile #
 
+    
+    //# CompileOnly #    
+
+    //# Reverse Engineer SQL Tables to JPA Objects #
     // Hibernate
     compileOnly "org.hibernate:hibernate-tools:${hibernateToolsRevEngVersion}"
-    compileOnly "org.hibernate:hibernate-core:${hibernateRevEngVersion}"
-    compileOnly "org.hibernate:hibernate-envers:${hibernateRevEngVersion}"
-    compileOnly "org.hibernate:hibernate-spatial:${hibernateRevEngVersion}"
-    compileOnly "org.hibernate:hibernate-entitymanager:${hibernateRevEngVersion}"
+    compileOnly "org.hibernate:hibernate-core:${hibernateVersion}"
+    compileOnly "org.hibernate:hibernate-envers:${hibernateVersion}"
+    compileOnly "org.hibernate:hibernate-spatial:${hibernateVersion}"
+    compileOnly "org.hibernate:hibernate-entitymanager:${hibernateVersion}"
 
-    //JaxB
+    //# JaxB -- No Longer in JDK 11
     compileOnly group: 'javax.xml.bind', name: 'jaxb-api', version: '2.3.1'
     compileOnly group: 'org.glassfish.jaxb', name: 'jaxb-runtime', version: '2.3.1'
+    
+    
 
-
-
-
-
-
-
-
-
-    // # Provided Compile (Already in the EE Container or Added to Container by Dennis) #
-	
-	// JDBC Driver -- Manually Added to WildFly Application Server
-	compileOnly "org.postgresql:postgresql:${postgreSqlJdbcVersion}"
-	compileOnly "mysql:mysql-connector-java:${mySqlConnectorJVersion}"
+    // # Provided Compile#
+    // # Already in the EE Container or Added to the development container (localhost) manually #
+    
+    // JDBC Driver -- Manually Added to WildFly Application Server
+    compileOnly "org.postgresql:postgresql:${postgreSqlJdbcVersion}"
+    compileOnly "mysql:mysql-connector-java:${mySqlConnectorJVersion}"
 
     // GIS Libs
     providedCompile  "org.geolatte:geolatte:${geolatteVersion}"
@@ -190,6 +186,10 @@ dependencies {
     providedCompile "javax:javaee-api:${javaEeVersion}"
     providedCompile "org.wildfly:wildfly-spec-api:${wildflyVersion}"
 
+
+    //# Compile #
+    // # NOT already in the EE Container and NOT added to the development container (localhost) by manually #
+    
     // PrimeFaces Core and Themes
     compile "org.primefaces:primefaces:${primefacesVersion}"
     compile "org.primefaces.themes:all-themes:${primefacesThemeVersion}"
