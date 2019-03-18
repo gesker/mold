@@ -299,7 +299,7 @@ war {
                 "Implementation-Title": appName,
                 "Implementation-Version": version,
                 "Implementation-Vendor": vendor
-                //"Main-Class"             : "ito.MainClass",
+                //"Main-Class"             : "mold.MainClass",
                 //"Class-Path"             : configurations.compile.collect { it.getName() }.join(' ')
         )
     }
