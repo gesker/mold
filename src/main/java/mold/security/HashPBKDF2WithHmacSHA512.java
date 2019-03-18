@@ -27,13 +27,13 @@ public class HashPBKDF2WithHmacSHA512 {
     }
 
 
-    public String getHashedText(String text) {
-        String hashed = pbkdfHash.generate(text.toCharArray());
+    public String getHashedText(String plainText) {
+        String hashed = pbkdfHash.generate(plainText.toCharArray());
         return hashed;
     }
 
 
-    public boolean isHashedTextMatch(String text, String hashedText) {
-        return this.pbkdfHash.verify(text.toCharArray(), hashedText);
+    public boolean isHashedTextMatch(String plainText, String hashedText) {
+        return this.pbkdfHash.verify(plainText.toCharArray(), hashedText);
     }
 }
