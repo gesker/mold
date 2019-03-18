@@ -1,0 +1,63 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns="http://www.w3.org/1999/xhtml">
+
+<h:head>
+    <title>Mold: Add User</title>
+    <meta name="viewport" content="width=device-width"/>
+    <meta http-equiv="refresh" content="#{session.maxInactiveInterval};url=#{request.contextPath}/page/setup/usr.xhtml"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+    <meta http-equiv="Pragma" content="no-cache"/>
+    <meta http-equiv="Expires" content="0"/>
+</h:head>
+
+<h:body>
+    <ui:composition template="/WEB-INF/facelets/faceletsTemplate.xhtml">
+        <ui:define name="content">
+            <f:view id="userView">
+
+
+
+
+
+
+                <h:form id="usrsListForm">
+                <p:dataTable id="usrDataTable" var="line" value="#{userBB.usrList}">
+                    <f:facet name="header">
+                        Users
+                    </f:facet>
+
+                    <p:column headerText="Enabled">
+                        <h:outputText value="#{line.enabled}"/>
+                    </p:column>
+
+                    <p:column headerText="Id">
+                        <h:outputText value="#{line.id}"/>
+                    </p:column>
+
+                    <p:column headerText="Name">
+                        <h:outputText value="#{line.uid}"/>
+                    </p:column>
+
+                    <p:column headerText="User Name">
+                        <h:outputText value="#{line.nme}"/>
+                    </p:column>
+
+
+
+                </p:dataTable>
+                    </h:form>
+
+
+
+            </f:view>
+        </ui:define>
+    </ui:composition>
+</h:body>
+</html>

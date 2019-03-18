@@ -11,7 +11,6 @@ import java.util.logging.Logger;
 
 @Singleton
 @Startup
-
 public class TryPBKDF2WithHmacSHA512EJB {
 
     private Logger logger = Logger.getLogger(this.getClass().getSimpleName());

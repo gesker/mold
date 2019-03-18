@@ -4,7 +4,7 @@ package mold.constant;
 public class WildFlyContainerConstant implements java.io.Serializable {
 
     public static final WildFlyContainerConstant INSTANCE = new WildFlyContainerConstant();
-    public static final String JAVAEE_PERSISTANCE_UNIT = "ItoPersistenceUnit";
+    public static final String JAVAEE_PERSISTANCE_UNIT = "MoldPersistenceUnit";
     public static final String JNDI_US_DATASOURCE = "java:jboss/datasources/PgDsMold";
     public static final String JNDI_US_DATASOURCE_XA = "java:jboss/datasources/PgDsXaMold";
     public static final String JNDI_US_SMTPMAIL_GMAIL = "java:jboss/mail/Gmail";
